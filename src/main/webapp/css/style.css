@@ -1,0 +1,68 @@
+body {
+	font-family: Helvetica;
+	margin: 5px;
+	padding: 0;
+}
+
+table {
+	border: 1px solid;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th, td {
+	text-align: center;
+	padding: 0;
+	border: 1px solid black;
+	width: 100px;
+}
+
+th, td.name, td.summary {
+	padding: 0.5em;
+}
+
+td.summary {
+	font-weight: bold;
+	color: green;
+}
+
+td.spacer {
+	background: #000;
+	height: 3px;
+}
+
+th:first-child, td:first-child {
+	text-align: left;
+}
+
+.clickable {
+	margin: 0;
+	padding: 0.5em;
+}
+
+.clickable:hover {
+	background: #eeeeee;
+	cursor: pointer
+}
+
+.available {
+	color: green;
+}
+
+.notavailable {
+	color: red;
+}
+
+ul {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100px;
+	background: white;
+	border: 1px solid black;
+}
+
+li {
+	list-style-type: none;
+	margin: 0;
+}

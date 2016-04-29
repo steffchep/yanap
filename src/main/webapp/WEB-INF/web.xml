@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	
+	<description>Availability Board</description>
+	<display-name>Availability Board</display-name>
+	
+	<listener>
+		<listener-class>com.topdesk.examples.Init</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>info</servlet-name>
+		<servlet-class>com.topdesk.examples.web.InfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>info</servlet-name>
+		<url-pattern>/latest</url-pattern>
+	</servlet-mapping>
+
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+</web-app>
