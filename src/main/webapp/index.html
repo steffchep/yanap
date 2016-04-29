@@ -54,8 +54,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint</td>
+			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}})</td>
 		</tr>
 	</table>
+	<div class="legend">
+		Legend:
+		<span class="available">&#x2713;</span> = available,
+		<span class="available">(&#x2713;)</span> = partially available,
+		<span class="notavailable">O</span> = out of office,
+		<span class="notavailable">X</span> = busy,
+		<span class="notavailable">:(</span> = unplanned absence (click table cell to change)
+	</div>
 </body>
 </html>

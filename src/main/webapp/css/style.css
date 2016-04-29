@@ -53,6 +53,10 @@ th:first-child, td:first-child {
 	color: red;
 }
 
+.legend {
+	margin-top: 1em;
+}
+
 ul {
 	position: absolute;
 	margin: 0;

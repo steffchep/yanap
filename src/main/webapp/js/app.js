@@ -29,6 +29,12 @@ var calculateDevDays = function(developers) {
 	return sum;
 };
 
+var percentTotal = function(developers) {
+	var sum = calculateDevDays(developers);
+	var total = developers.length * developers[0].days.length;
+	return Math.round(sum / total * 100) + "%";
+};
+
 var availabilityPopup = function(id) {
 	$('#' + id).show();
 };
@@ -80,6 +86,7 @@ availabilityBoard.controller('availabilityController', function($scope) {
 	 };
 
      $scope.calculateDevDays = calculateDevDays;
+     $scope.percentTotal = percentTotal;
      $scope.getMarkup = getMarkup;
 	 $scope.availabilityPopup = availabilityPopup;
 	 $scope.setAvail = setAvail;
