@@ -37,7 +37,7 @@ var percentTotal = function(developers) {
 
 var availabilityPopup = function(id) {
 	$("ul").hide();
-	$('#' + id).show();
+	$('#' + id).show(); // TODO: set absolute position manually
 };
 
 var setAvail = function(array, index, value) {
