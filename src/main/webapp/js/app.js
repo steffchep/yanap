@@ -36,6 +36,7 @@ var percentTotal = function(developers) {
 };
 
 var availabilityPopup = function(id) {
+	$("ul").hide();
 	$('#' + id).show();
 };
 
