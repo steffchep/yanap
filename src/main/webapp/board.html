@@ -12,7 +12,17 @@
 
 <body>
 	<h1>{{sprint.name}}</h1>
-	<h2>Start: {{sprint.startDate}} - End: {{sprint.endDate}} -  Status: <span id="sprintStatus" class="status {{getClassForStatus(sprint.status)}}">{{sprint.status}}</span></h2>
+	<h2>Start: {{sprint.startDate}} - End: {{sprint.endDate}} -  Status:
+		<span>
+			<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{sprint.status}}</span> (click to change)
+			<!--suppress HtmlUnknownTag -->
+			<ul id="{{sprint.id}}" style="display: none">
+				<li class="clickable upcoming" title="upcoming" ng-click="setSprintStatus(sprint, 'upcoming')">upcoming</li>
+				<li class="clickable in_progress" title="in progress" ng-click="setSprintStatus(sprint, 'in progress')">in progress</li>
+				<li class="clickable ended" title="ended" ng-click="setSprintStatus(sprint, 'ended')">ended</li>
+			</ul>
+		</span>
+	</h2>
 	<table>
 		<tr>
 			<th>Name</th>
@@ -32,7 +42,7 @@
 			<td ng-repeat="day in person.days">
 				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
 				<ul id="{{person.name + '_' + $index}}" style="display: none">
-					<li class="clickable available" title="abailable" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="available" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
 					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
 					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
 					<li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
@@ -48,7 +58,7 @@
 			<td ng-repeat="day in person.days">
 				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
 				<ul id="{{'' + person.name + '_' + $index}}" style="display: none">
-					<li class="clickable available" title="abailable" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="available" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
 					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
 					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
 				    <li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
@@ -57,7 +67,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}}) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
+			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of 60 days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
 		</tr>
 	</table>
 	<div class="legend">
@@ -70,7 +80,7 @@
 		<span class="notavailable">:(</span> = unplanned absence&nbsp;&nbsp; <strong>(click table cell to change)</strong>
 	</div>
 	<div class="legend">
-		<a href="index.html">&raquo; Return to list</a>
+		<a class="clickable" href="index.html">&raquo; Return to list</a>
 	</div>
 </body>
 </html>

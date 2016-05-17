@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="availabilityBoard" ng-controller="boardListController">
 <head>
-	<title>{{sprint.name}}</title>
+	<title>YANAP Availability Board</title>
 	<script src="js/lib/jquery-2.1.4.min.js"></script>
 	<script src="js/lib/angular.min.js"></script>
 	<script src="js/lib/angular-sanitize.js"></script>
@@ -12,21 +12,32 @@
 
 <body>
 <h1>Sprint List</h1>
-<table>
-	<tr>
-		<th>Name</th>
-		<th>Start</th>
-		<th>End</th>
-		<th>Status</th>
-		<th>Action</th>
-	</tr>
-	<tr ng-repeat="sprint in boards">
-		<td class="name">{{sprint.name}}</td>
-		<td class="date">{{sprint.startDate}}</td>
-		<td class="date">{{sprint.endDate}}</td>
-		<td class="status {{getClassForStatus(sprint.status)}}">{{sprint.status}}</td>
-		<td class="actions"><a href="board.html?id={{sprint.id}}">view</a> start close delete</td>
-	</tr>
-</table>
+<form action="boards/create" method="POST">
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Start</th>
+			<th>End</th>
+			<th>Status</th>
+			<th>Action</th>
+		</tr>
+		<tr ng-repeat="sprint in boards">
+			<td class="clickable name"><a href="board.html?id={{sprint.id}}">{{sprint.name}}</a></td>
+			<td class="date">{{sprint.startDate}}</td>
+			<td class="date">{{sprint.endDate}}</td>
+			<td class="status {{getClassForStatus(sprint.status)}}">{{sprint.status}}</td>
+			<td class="actions"><a class="clickable" href="">delete</a></td>
+		</tr>
+		<tr>
+		<tr class="new">
+			<td><input type="text" name="newSprintName" value="" required="required" placeholder="Sprint Name"></td>
+			<td><input type="date" name="newSprintStart" value="" required="required"></td>
+			<td><input type="date" name="newSprintEnd" value="" required="required"></td>
+			<td><div id="errormessage"></div></td>
+			<td><input type="submit" value="Add Sprint"></td>
+		</tr>
+	</table>
+</form>
+
 </body>
 </html>

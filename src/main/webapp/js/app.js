@@ -60,14 +60,32 @@ var availabilityPopup = function(id) {
 			$('.hideonupcoming').hide();
 		}
 	} else {
+		$('.hideonupcoming').show();
 		allPopups.hide();
 	}
 };
 
 var setAvail = function(array, index, value) {
 	array[index] = value;
+	$('.hideonupcoming').show();
 	$("ul").hide();
 };
+
+var statusPopup = function(id) {
+	var currentPopup = $('#' + id),
+		allPopups = $("ul");
+	if(!currentPopup.is(":visible")) {
+		allPopups.hide();
+		currentPopup.show(); // TODO: set absolute position manually
+	} else {
+		allPopups.hide();
+	}
+};
+
+var setSprintStatus = function(sprint, status) {
+	$("ul").hide();
+	sprint.status = status;
+}
 
 var getClassForStatus = function(status) {
 	return status.replace(/\s/g, "_");
@@ -75,7 +93,7 @@ var getClassForStatus = function(status) {
 
 availabilityBoard.controller('availabilityController', function($scope) {
 	 $scope.sprint = {
-	 	id: 0815,
+	 	id: 815,
 	 	name : "My Awesome Sprint",
 		startDate: "2016.01.01",
 		endDate: "2016.01.14",
@@ -127,26 +145,28 @@ availabilityBoard.controller('availabilityController', function($scope) {
 	 $scope.setAvail = setAvail;
 	 $scope.isNotClosed = $scope.sprint.status !== 'closed';
 	 $scope.isInProgress = $scope.sprint.status === 'in progress';
+     $scope.statusPopup = statusPopup;
+     $scope.setSprintStatus = setSprintStatus;
 });
 
 availabilityBoard.controller('boardListController', function($scope) {
 	 $scope.boards = [
 		 {
-		 	id: 0815,
+		 	id: 815,
 		 	name: "My first sprint",
 		 	startDate: "2016.01.01",
 		 	endDate: "2016.01.14",
 		 	status: "ended"
 		 },
 		 {
-		 	id: 0816,
+		 	id: 816,
 		 	name: "My second sprint",
 		 	startDate: "2016.01.14",
 		 	endDate: "2016.01.28",
             status: "in progress"
 		 },
 		 {
-		 	id: 0817,
+		 	id: 817,
 		 	name: "My third sprint",
 		 	startDate: "2016.01.28",
 		 	endDate: "2016.02.11",
@@ -154,9 +174,9 @@ availabilityBoard.controller('boardListController', function($scope) {
 		 }
 	 ];
 
-	$scope.boards.sort(function(sprintA, sprintB) {
-         return sprintA.startDate > sprintB.startDate ? -1 : 1;
-	});
+//	$scope.boards.sort(function(sprintA, sprintB) {
+//         return sprintA.startDate > sprintB.startDate ? -1 : 1;
+//	});
 
      $scope.getClassForStatus = getClassForStatus;
 });

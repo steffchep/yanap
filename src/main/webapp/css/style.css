@@ -26,14 +26,47 @@ ul {
 	border: 1px solid black;
 }
 
+h2 ul {
+	left: 35%;
+	font-size: 70%;
+}
+
 li {
 	list-style-type: none;
 	margin: 0;
 }
 
 a {
+	color: blue;
 	text-decoration: none;
 	font-weight: bold;
+}
+
+a:visited {
+	color: blue;
+}
+
+td a {
+	display: block;
+	margin: 0;
+}
+
+tr.new td {
+	padding: 0.5em;
+}
+
+tr.new input {
+	font-size: larger;
+	width: 90%;
+}
+
+input[type=submit] {
+	border: 1px solid;
+	background-color: white;
+}
+
+input[type=submit]:hover {
+	background-color: #eeeeee;
 }
 
 th, td.name, td.summary {

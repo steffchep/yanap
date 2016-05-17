@@ -6,16 +6,16 @@
 	<display-name>Availability Board</display-name>
 	
 	<listener>
-		<listener-class>com.topdesk.examples.Init</listener-class>
+		<listener-class>com.topdesk.yanap.Init</listener-class>
 	</listener>
 	
 	<servlet>
-		<servlet-name>info</servlet-name>
-		<servlet-class>com.topdesk.examples.web.InfoServlet</servlet-class>
+		<servlet-name>yanap</servlet-name>
+		<servlet-class>com.topdesk.yanap.web.YanapServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>info</servlet-name>
-		<url-pattern>/latest</url-pattern>
+		<servlet-name>yanap</servlet-name>
+		<url-pattern>/boards/*</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>
