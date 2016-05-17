@@ -45,6 +45,10 @@ var setAvail = function(array, index, value) {
 	$("ul").hide();
 };
 
+var getClassForStatus = function(status) {
+	return status.replace(/\s/g, "_");
+};
+
 availabilityBoard.controller('availabilityController', function($scope) {
 	 $scope.sprint = {
 	 	name : "My Awesome Sprint",
@@ -91,4 +95,36 @@ availabilityBoard.controller('availabilityController', function($scope) {
      $scope.getMarkup = getMarkup;
 	 $scope.availabilityPopup = availabilityPopup;
 	 $scope.setAvail = setAvail;
+});
+
+availabilityBoard.controller('boardListController', function($scope) {
+	 $scope.boards = [
+		 {
+		 	id: 0815,
+		 	name: "My first sprint",
+		 	startDate: "2016.01.01",
+		 	endDate: "2016.01.14",
+		 	status: "ended"
+		 },
+		 {
+		 	id: 0816,
+		 	name: "My second sprint",
+		 	startDate: "2016.01.14",
+		 	endDate: "2016.01.28",
+            status: "in progress"
+		 },
+		 {
+		 	id: 0817,
+		 	name: "My third sprint",
+		 	startDate: "2016.01.28",
+		 	endDate: "20016.02.11",
+            status: "upcoming"
+		 }
+	 ];
+
+	$scope.boards.sort(function(sprintA, sprintB) {
+         return sprintA.startDate > sprintB.startDate ? -1 : 1;
+	});
+
+     $scope.getClassForStatus = getClassForStatus;
 });

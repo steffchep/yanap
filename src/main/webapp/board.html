@@ -1,0 +1,73 @@
+<!doctype html>
+<html ng-app="availabilityBoard" ng-controller="availabilityController">
+<head>
+	<title>{{sprint.name}}</title>
+	<script src="js/lib/jquery-2.1.4.min.js"></script>
+	<script src="js/lib/angular.min.js"></script>
+	<script src="js/lib/angular-sanitize.js"></script>
+	<script src="js/app.js"></script>
+	<link rel="stylesheet" href="css/style.css"/>
+</head>
+
+<body>
+	<h1>{{sprint.name}}</h1>
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Di</th>
+			<th>Mi</th>
+			<th>Do</th>
+			<th>Fr</th>
+			<th>Mo</th>
+			<th>Di</th>
+			<th>Mi</th>
+			<th>Do</th>
+			<th>Fr</th>
+			<th>Mo</th>
+		</tr>
+		<tr ng-repeat="person in sprint.developers">
+			<td class="name">{{person.name}}</td>
+			<td ng-repeat="day in person.days">
+				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
+				<ul id="{{person.name + '_' + $index}}" style="display: none">
+					<li class="clickable available" title="abailable" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
+					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
+					<li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
+					<li class="clickable notavailable" title="unplanned" ng-click="setAvail(person.days, $index, 4)">:(</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td class="spacer" colspan="11"></td>
+		</tr>
+		<tr ng-repeat="person in sprint.nondevelopers">
+			<td class="name">{{person.name}}</td>
+			<td ng-repeat="day in person.days">
+				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
+				<ul id="{{'' + person.name + '_' + $index}}" style="display: none">
+					<li class="clickable available" title="abailable" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
+					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
+				    <li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
+				    <li class="clickable notavailable" title="unplanned" ng-click="setAvail(person.days, $index, 4)">:(</li>
+				</ul>
+			</td>
+		</tr>
+		<tr>
+			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}})</td>
+		</tr>
+	</table>
+	<div class="legend">
+		Legend:
+		<span class="available">&#x2713;</span> = available,
+		<span class="available">(&#x2713;)</span> = partially available,
+		<span class="notavailable">O</span> = out of office,
+		<span class="notavailable">X</span> = busy with non-sprint stuff,
+		<span class="notavailable">:(</span> = unplanned absence (click table cell to change)
+	</div>
+	<div class="legend">
+		<a href="index.html">&raquo; Return to list</a>
+	</div>
+</body>
+</html>

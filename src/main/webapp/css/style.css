@@ -17,6 +17,25 @@ th, td {
 	width: 100px;
 }
 
+ul {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100px;
+	background: white;
+	border: 1px solid black;
+}
+
+li {
+	list-style-type: none;
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
 th, td.name, td.summary {
 	padding: 0.5em;
 }
@@ -57,16 +76,12 @@ th:first-child, td:first-child {
 	margin-top: 1em;
 }
 
-ul {
-	position: absolute;
-	margin: 0;
-	padding: 0;
-	width: 100px;
-	background: white;
-	border: 1px solid black;
+.ended {
+	color: red;
 }
-
-li {
-	list-style-type: none;
-	margin: 0;
+.in_progress {
+	color: green;
+}
+.upcoming {
+	color: orange;
 }
