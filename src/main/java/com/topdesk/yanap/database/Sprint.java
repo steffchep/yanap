@@ -29,31 +29,6 @@ import lombok.ToString;
 	@NamedQuery(name = "Sprint.getAll", query = "SELECT s FROM sprints s ORDER BY date DESC")
 })
 public class Sprint {
-	public enum Status {
-		UPCOMING("upcoming", 1), IN_PROGRESS("in progress", 2), ENDED("ended", 3);
-
-		private final String text;
-		private final int number;
-
-		private Status(String text, int number) {
-			this.text = text;
-			this.number = number;
-		}
-
-		public static Status fromNumber(int number) {
-			for (Status st : Status.values()) {
-				if (number == st.number) {
-					return st;
-				}
-			}
-			return null;
-		}
-
-		public static String toString(Status status) {
-			return status != null ? status.text : null;
-		}
-	}
-
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private long id;
@@ -69,5 +44,4 @@ public class Sprint {
 
 	@Column(name = "status")
 	private int status;
-
 }

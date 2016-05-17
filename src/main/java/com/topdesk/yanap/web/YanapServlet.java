@@ -17,10 +17,48 @@ public class YanapServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if (req.getRequestURI().equals("/boards")) {
+			doGetAllSprints(req, resp);
+		} else {
+			doGetSingleSprint(req, resp);
+		}
+	}
+
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
 			resp.setContentType("application/json; charset=utf8");
-			writer.write("");
+			writer.write("POST: work in progress");
 		}
+	}
+
+	@Override
+	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType("application/json; charset=utf8");
+			writer.write("PUT work in progress");
+		}
+	}
+
+	@Override
+	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType("application/json; charset=utf8");
+			writer.write("DELETE work in progress");
+		}
+	}
+
+	private void doGetAllSprints(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+		System.err.println("Get all Sprints");
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType("application/json; charset=utf8");
+			writer.write("work in progress");
+		}
+	}
+
+	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+		String sprintId = req.getRequestURI().replace("/boards/", "");
+		System.err.println("Get for Sprint: " + sprintId);
 	}
 
 }
