@@ -17,6 +17,17 @@ var getMarkup = function(availability) {
 	}
 };
 
+var getStatusText = function(status) {
+	switch(status) {
+		case 1:
+			return "upcoming";
+		case 2:
+			return "in progress";
+		default:
+			return "ended";
+	}
+};
+
 var calculateDevDays = function(developers) {
 	var sum = 0;
 	for (i = 0; i < developers.length; i++) {
@@ -88,7 +99,7 @@ var setSprintStatus = function(sprint, status) {
 }
 
 var getClassForStatus = function(status) {
-	return status.replace(/\s/g, "_");
+	return getStatusText(status).replace(/\s/g, "_");
 };
 
 availabilityBoard.controller('availabilityController', function($scope) {
@@ -97,7 +108,7 @@ availabilityBoard.controller('availabilityController', function($scope) {
 	 	name : "My Awesome Sprint",
 		startDate: "2016.01.01",
 		endDate: "2016.01.14",
-		status: "in progress",
+		status: 2,
 		developers : [
 			{
 				name : "Dawid",
@@ -140,6 +151,7 @@ availabilityBoard.controller('availabilityController', function($scope) {
      $scope.percentTotal = percentTotal;
      $scope.getUnplannedAbsences = getUnplannedAbsences;
      $scope.getMarkup = getMarkup;
+     $scope.getStatusText = getStatusText;
      $scope.getClassForStatus = getClassForStatus;
 	 $scope.availabilityPopup = availabilityPopup;
 	 $scope.setAvail = setAvail;
@@ -156,21 +168,21 @@ availabilityBoard.controller('boardListController', function($scope) {
 		 	name: "My first sprint",
 		 	startDate: "2016.01.01",
 		 	endDate: "2016.01.14",
-		 	status: "ended"
+		 	status: 3
 		 },
 		 {
 		 	id: 816,
 		 	name: "My second sprint",
 		 	startDate: "2016.01.14",
 		 	endDate: "2016.01.28",
-            status: "in progress"
+            status: 2
 		 },
 		 {
 		 	id: 817,
 		 	name: "My third sprint",
 		 	startDate: "2016.01.28",
 		 	endDate: "2016.02.11",
-            status: "upcoming"
+            status: 1
 		 }
 	 ];
 
@@ -179,4 +191,5 @@ availabilityBoard.controller('boardListController', function($scope) {
 //	});
 
      $scope.getClassForStatus = getClassForStatus;
+     $scope.getStatusText = getStatusText;
 });
