@@ -5,12 +5,13 @@
 	<script src="js/lib/jquery-2.1.4.min.js"></script>
 	<script src="js/lib/angular.min.js"></script>
 	<script src="js/lib/angular-sanitize.js"></script>
+	<script src="js/lib/moment-with-locales-2.11.2.js"></script>
 	<script src="js/app.js"></script>
 	<link rel="stylesheet" href="css/style.css"/>
 </head>
 
 <body>
-<h1>Sprint overview</h1>
+<h1>Sprint List</h1>
 <table>
 	<tr>
 		<th>Name</th>
@@ -24,7 +25,7 @@
 		<td class="date">{{sprint.startDate}}</td>
 		<td class="date">{{sprint.endDate}}</td>
 		<td class="status {{getClassForStatus(sprint.status)}}">{{sprint.status}}</td>
-		<td class="actions"><a href="board.html?id={{sprint.id}}">view</a> delete</td>
+		<td class="actions"><a href="board.html?id={{sprint.id}}">view</a> start close delete</td>
 	</tr>
 </table>
 </body>

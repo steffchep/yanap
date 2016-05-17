@@ -13,7 +13,7 @@ var getMarkup = function(availability) {
 		case 4:
 			return { class: "notavailable", character : ":("};
 		default:
-			return { class: "", character : ""};
+			return { class: "noneselected", character : "?"};
 	}
 };
 
@@ -29,6 +29,18 @@ var calculateDevDays = function(developers) {
 	return sum;
 };
 
+var getUnplannedAbsences = function(developers) {
+	var sum = 0;
+	for (i = 0; i < developers.length; i++) {
+		for (j = 0; j < developers[i].days.length; j++) {
+			if (developers[i].days[j] === 4) {
+				sum += 1;
+			}
+		}
+	}
+	return sum;
+};
+
 var percentTotal = function(developers) {
 	var sum = calculateDevDays(developers);
 	var total = developers.length * developers[0].days.length;
@@ -36,8 +48,20 @@ var percentTotal = function(developers) {
 };
 
 var availabilityPopup = function(id) {
-	$("ul").hide();
-	$('#' + id).show(); // TODO: set absolute position manually
+	var status = $('#sprintStatus').html(),
+		currentPopup = $('#' + id),
+		allPopups = $("ul");
+	if (status === "ended") {
+		alert("This sprint has already ended, it is read-only");
+	} else if(!currentPopup.is(":visible")) {
+		allPopups.hide();
+		currentPopup.show(); // TODO: set absolute position manually
+		if	(status === "upcoming") {
+			$('.hideonupcoming').hide();
+		}
+	} else {
+		allPopups.hide();
+	}
 };
 
 var setAvail = function(array, index, value) {
@@ -51,7 +75,11 @@ var getClassForStatus = function(status) {
 
 availabilityBoard.controller('availabilityController', function($scope) {
 	 $scope.sprint = {
+	 	id: 0815,
 	 	name : "My Awesome Sprint",
+		startDate: "2016.01.01",
+		endDate: "2016.01.14",
+		status: "in progress",
 		developers : [
 			{
 				name : "Dawid",
@@ -75,7 +103,7 @@ availabilityBoard.controller('availabilityController', function($scope) {
 			},
 			{
 				name : "Steffi",
-				days : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
+				days : [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
 			}
 		],
 		nondevelopers : [
@@ -92,9 +120,13 @@ availabilityBoard.controller('availabilityController', function($scope) {
 
      $scope.calculateDevDays = calculateDevDays;
      $scope.percentTotal = percentTotal;
+     $scope.getUnplannedAbsences = getUnplannedAbsences;
      $scope.getMarkup = getMarkup;
+     $scope.getClassForStatus = getClassForStatus;
 	 $scope.availabilityPopup = availabilityPopup;
 	 $scope.setAvail = setAvail;
+	 $scope.isNotClosed = $scope.sprint.status !== 'closed';
+	 $scope.isInProgress = $scope.sprint.status === 'in progress';
 });
 
 availabilityBoard.controller('boardListController', function($scope) {
@@ -117,7 +149,7 @@ availabilityBoard.controller('boardListController', function($scope) {
 		 	id: 0817,
 		 	name: "My third sprint",
 		 	startDate: "2016.01.28",
-		 	endDate: "20016.02.11",
+		 	endDate: "2016.02.11",
             status: "upcoming"
 		 }
 	 ];
