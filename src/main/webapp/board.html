@@ -67,7 +67,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of 60 days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
+			<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of {{totalDays(sprint.developers)}} days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
 		</tr>
 	</table>
 	<div class="legend">

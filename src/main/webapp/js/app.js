@@ -57,10 +57,17 @@ var getUnplannedAbsences = function(developers) {
 	return sum;
 };
 
+var totalDays = function(developers) {
+	if (developers.length > 0) {
+		var total = developers.length * (developers[0].days.length - 1);
+		return total;
+	}
+	return 0;
+}
 var percentTotal = function(developers) {
 	if (developers.length > 0) {
 		var sum = calculateDevDays(developers);
-		var total = developers.length * (developers[0].days.length - 1);
+		var total = totalDays(developers);
 		return Math.round(sum / total * 100) + "%";
 	}
 	return 0;
@@ -124,6 +131,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 	$scope.calculateDevDays = calculateDevDays;
 	$scope.percentTotal = percentTotal;
+	$scope.totalDays = totalDays;
 	$scope.getUnplannedAbsences = getUnplannedAbsences;
 	$scope.getMarkup = getMarkup;
 	$scope.getStatusText = getStatusText;
