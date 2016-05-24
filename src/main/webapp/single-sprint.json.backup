@@ -1,0 +1,43 @@
+{
+  "id": 815,
+  "name" : "Half a Sprint, too",
+  "startDate": "2016.05.24",
+  "endDate": "2016.06.07",
+  "status": 2,
+  "developers" : [
+    {
+      "name" : "Dawid",
+      "days" : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name" : "Jana",
+      "days" : [ 1, 1, 3, 3, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name" : "Jessica",
+      "days" : [ 1, 2, 1, 1, 1, 1, 1, 0.5, 3, 3 ]
+    },
+    {
+      "name" : "Michael",
+      "days" : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name" : "Rauf",
+      "days" : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
+    },
+    {
+      "name" : "Steffi",
+      "days" : [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    }
+  ],
+  "nondevelopers" : [
+    {
+      "name" : "Tom",
+      "days" : [ 1, 1, 1, 1, 1, 3, 3, 3, 3, 3 ]
+    },
+    {
+      "name" : "Phil",
+      "days" : [ 1, 1, 1, 1, 1, 3, 3, 3, 3, 3 ]
+    }
+  ]
+}

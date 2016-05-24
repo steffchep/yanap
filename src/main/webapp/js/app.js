@@ -1,5 +1,10 @@
 var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
 
+var emptySprint = {
+	"developers": [],
+	"nondevelopers": []
+};
+
 var getMarkup = function(availability) {
 	switch(availability) {
 		case 1:
@@ -53,9 +58,12 @@ var getUnplannedAbsences = function(developers) {
 };
 
 var percentTotal = function(developers) {
-	var sum = calculateDevDays(developers);
-	var total = developers.length * developers[0].days.length;
-	return Math.round(sum / total * 100) + "%";
+	if (developers.length > 0) {
+		var sum = calculateDevDays(developers);
+		var total = developers.length * (developers[0].days.length - 1);
+		return Math.round(sum / total * 100) + "%";
+	}
+	return 0;
 };
 
 var availabilityPopup = function(id) {
@@ -75,6 +83,7 @@ var availabilityPopup = function(id) {
 		allPopups.hide();
 	}
 };
+
 
 var setAvail = function(array, index, value) {
 	array[index] = value;
@@ -96,69 +105,40 @@ var statusPopup = function(id) {
 var setSprintStatus = function(sprint, status) {
 	$("ul").hide();
 	sprint.status = status;
-}
+};
 
 var getClassForStatus = function(status) {
 	return getStatusText(status).replace(/\s/g, "_");
 };
 
-availabilityBoard.controller('availabilityController', function($scope) {
-	 $scope.sprint = {
-	 	id: 815,
-	 	name : "My Awesome Sprint",
-		startDate: "2016.01.01",
-		endDate: "2016.01.14",
-		status: 2,
-		developers : [
-			{
-				name : "Dawid",
-				days : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
-			},
-			{
-				name : "Jana",
-				days : [ 1, 1, 3, 3, 1, 1, 1, 1, 1, 1 ]
-			},
-			{
-				name : "Jessica",
-				days : [ 1, 2, 1, 1, 1, 1, 1, 0.5, 3, 3 ]
-			},
-			{
-				name : "Michael",
-				days : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
-			},
-			{
-				name : "Rauf",
-				days : [ 1, 2, 3, 0.5, 1, 1, 1, 1, 1, 1 ]
-			},
-			{
-				name : "Steffi",
-				days : [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-			}
-		],
-		nondevelopers : [
-			{
-				name : "Tom",
-				days : [ 1, 1, 1, 1, 1, 3, 3, 3, 3, 3 ]
-			},
-			{
-				name : "Phil",
-				days : [ 1, 1, 1, 1, 1, 3, 3, 3, 3, 3 ]
-			}
-		]
-	 };
+var saveSprintData = function(json) {
 
-     $scope.calculateDevDays = calculateDevDays;
-     $scope.percentTotal = percentTotal;
-     $scope.getUnplannedAbsences = getUnplannedAbsences;
-     $scope.getMarkup = getMarkup;
-     $scope.getStatusText = getStatusText;
-     $scope.getClassForStatus = getClassForStatus;
-	 $scope.availabilityPopup = availabilityPopup;
-	 $scope.setAvail = setAvail;
-	 $scope.isNotClosed = $scope.sprint.status !== 'closed';
-	 $scope.isInProgress = $scope.sprint.status === 'in progress';
-     $scope.statusPopup = statusPopup;
-     $scope.setSprintStatus = setSprintStatus;
+};
+
+availabilityBoard.controller('availabilityController', function($scope, $http) {
+	$scope.sprint = emptySprint;
+
+	$http.get('single-sprint.json').success(function(res){
+		$scope.sprint = res;
+	});
+
+	$scope.calculateDevDays = calculateDevDays;
+	$scope.percentTotal = percentTotal;
+	$scope.getUnplannedAbsences = getUnplannedAbsences;
+	$scope.getMarkup = getMarkup;
+	$scope.getStatusText = getStatusText;
+	$scope.getClassForStatus = getClassForStatus;
+	$scope.availabilityPopup = availabilityPopup;
+	$scope.isNotClosed = $scope.sprint.status !== 'closed';
+	$scope.isInProgress = $scope.sprint.status === 'in progress';
+	$scope.statusPopup = statusPopup;
+	$scope.setAvail = setAvail;
+	$scope.setSprintStatus = setSprintStatus;
+	$scope.saveSprint = function() {
+		console.log("saving");
+		$http.post('/boards', $scope.sprint);
+		console.log($scope.sprint);
+	};
 });
 
 availabilityBoard.controller('boardListController', function($scope) {

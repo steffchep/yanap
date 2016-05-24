@@ -60,9 +60,13 @@ tr.new input {
 	width: 90%;
 }
 
-input[type=submit] {
+input[type=submit], button {
 	border: 1px solid;
 	background-color: white;
+}
+
+button {
+	font-size: 100%;
 }
 
 input[type=submit]:hover {
