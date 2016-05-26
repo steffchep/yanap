@@ -11,9 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by stephaniep on 01.04.2016.
- */
 public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
 
@@ -29,11 +26,11 @@ public class YanapServlet extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("text/plain");
+			resp.setContentType("application/json");
 			String fileName = "single-sprint.json";
 
-			StringBuffer jb = new StringBuffer();
-			String line = null;
+			StringBuilder jb = new StringBuilder();
+			String line;
 			try {
 				BufferedReader reader = req.getReader();
 				while ((line = reader.readLine()) != null)
@@ -45,7 +42,7 @@ public class YanapServlet extends HttpServlet {
 			fileWriter.print(jb.toString());
 			fileWriter.close();
 
-			writer.write("POST: work in progress");
+			writer.write(jb.toString());
 		}
 	}
 

@@ -1,5 +1,5 @@
 body {
-	font-family: Helvetica;
+	font-family: Helvetica, sans-serif;
 	margin: 5px;
 	padding: 0;
 }
@@ -69,6 +69,10 @@ button {
 	font-size: 100%;
 }
 
+button:hover {
+	background-color: #f0f0f0;
+}
+
 input[type=submit]:hover {
 	background-color: #eeeeee;
 }
@@ -121,4 +125,31 @@ th:first-child, td:first-child {
 }
 .upcoming {
 	color: orange;
+}
+
+#saveerror {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0,0,0,0.4);
+}
+
+#saveerror span {
+	float: right;
+	color: red;
+	display: inline-block;
+	height: 2em;
+	width: 2em;
+	margin-top: -2em;
+	margin-right: -3em;
+}
+
+#saveerror div {
+	width: 300px;
+	margin: 10% auto;
+	padding: 2em;
+	background: white;
+	color: red;
 }

@@ -1,5 +1,15 @@
 var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
 
+var clone = function (obj) {
+	return angular.copy(obj);
+};
+
+
+var isEqual = function(o1, o2) {
+	return angular.equals(o1, o2) ;
+};
+
+
 var emptySprint = {
 	"developers": [],
 	"nondevelopers": []
@@ -59,11 +69,11 @@ var getUnplannedAbsences = function(developers) {
 
 var totalDays = function(developers) {
 	if (developers.length > 0) {
-		var total = developers.length * (developers[0].days.length - 1);
-		return total;
+		return developers.length * (developers[0].days.length - 1);
 	}
 	return 0;
-}
+};
+
 var percentTotal = function(developers) {
 	if (developers.length > 0) {
 		var sum = calculateDevDays(developers);
@@ -127,6 +137,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 	$http.get('single-sprint.json').success(function(res){
 		$scope.sprint = res;
+		$scope.sprintLast = clone(res);
 	});
 
 	$scope.calculateDevDays = calculateDevDays;
@@ -144,8 +155,21 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.setSprintStatus = setSprintStatus;
 	$scope.saveSprint = function() {
 		console.log("saving");
-		$http.post('/boards', $scope.sprint);
-		console.log($scope.sprint);
+
+		$http.get('single-sprint.json').success(function(res){
+			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
+			console.log(res);
+			if (isEqual(res, $scope.sprintLast)) {
+				$http.post('/boards', $scope.sprint);
+				$scope.sprintLast = clone($scope.sprint);
+			} else {
+				$scope.sprint = res;
+				$scope.sprintLast = clone(res);
+				$('#saveerror').show();
+			}
+		});
+
+
 	};
 });
 
