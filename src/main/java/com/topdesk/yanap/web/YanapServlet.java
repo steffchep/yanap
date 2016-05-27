@@ -1,9 +1,8 @@
 package com.topdesk.yanap.web;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import org.apache.commons.io.FileUtils;
+
+import java.io.*;
 import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
@@ -13,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
+	private static final String SPRINT_PATH = "src/main/webapp/single-sprint.json";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,24 +25,11 @@ public class YanapServlet extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json");
-			String fileName = "single-sprint.json";
-
-			StringBuilder jb = new StringBuilder();
-			String line;
-			try {
-				BufferedReader reader = req.getReader();
-				while ((line = reader.readLine()) != null)
-					jb.append(line);
-			} catch (Exception e) { /*report an error*/ }
-
-			System.err.println("Data: " + jb);
-			PrintWriter fileWriter = new PrintWriter("src/main/webapp/single-sprint.json", "UTF-8");
-			fileWriter.print(jb.toString());
-			fileWriter.close();
-
-			writer.write(jb.toString());
+		String uri = req.getRequestURI();
+		if (uri.startsWith("/boards")) {
+			doSaveSprint(req, resp);
+		} else if (uri.startsWith("/sprint")) {
+			doSaveProperty(req, resp);
 		}
 	}
 
@@ -69,10 +56,43 @@ public class YanapServlet extends HttpServlet {
 			writer.write("work in progress");
 		}
 	}
-
 	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
 		String sprintId = req.getRequestURI().replace("/boards/", "");
-		System.err.println("Get for Sprint: " + sprintId);
+		System.err.println("Get single sprint: " + sprintId);
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			String tempReturn = FileUtils.readFileToString(new File(SPRINT_PATH));
+			resp.setContentType("application/json; charset=utf8");
+			writer.write(tempReturn);
+		}
+	}
+
+	private void doSaveSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String sprintId = req.getRequestURI().replace("/boards/", "");
+		System.err.println("Saving: " + sprintId);
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType("application/json");
+
+			StringBuilder jb = new StringBuilder();
+			String line;
+			try {
+				BufferedReader reader = req.getReader();
+				while ((line = reader.readLine()) != null)
+					jb.append(line);
+			} catch (Exception e) { /*report an error*/ }
+
+			PrintWriter fileWriter = new PrintWriter(SPRINT_PATH, "UTF-8");
+			fileWriter.print(jb.toString());
+			fileWriter.close();
+
+			writer.write(jb.toString());
+		}
+	}
+
+	private void doSaveProperty(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType("application/json; charset=utf8");
+			writer.write("doSaveProperty work in progress");
+		}
 	}
 
 }

@@ -42,11 +42,11 @@
 			<td ng-repeat="day in person.days">
 				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
 				<ul id="{{person.name + '_' + $index}}" style="display: none">
-					<li class="clickable available" title="available" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
-					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
-					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
-					<li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
-					<li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person.days, $index, 4)">:(</li>
+					<li class="clickable available" title="available" ng-click="setAvail(person, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="partially available" ng-click="setAvail(person, $index, 0.5)">(&#x2713;)</li>
+					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person, $index, 2)">O</li>
+					<li class="clickable notavailable" title="busy" ng-click="setAvail(person, $index, 3)">X</li>
+					<li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person, $index, 4)">:(</li>
 				</ul>
 			</td>
 		</tr>
@@ -58,11 +58,11 @@
 			<td ng-repeat="day in person.days">
 				<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(person.name + '_' + $index)"></div>
 				<ul id="{{'' + person.name + '_' + $index}}" style="display: none">
-					<li class="clickable available" title="available" ng-click="setAvail(person.days, $index, 1)">&#x2713;</li>
-					<li class="clickable available" title="partially available" ng-click="setAvail(person.days, $index, 0.5)">(&#x2713;)</li>
-					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person.days, $index, 2)">O</li>
-				    <li class="clickable notavailable" title="busy" ng-click="setAvail(person.days, $index, 3)">X</li>
-				    <li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person.days, $index, 4)">:(</li>
+					<li class="clickable available" title="available" ng-click="setAvail(person, $index, 1)">&#x2713;</li>
+					<li class="clickable available" title="partially available" ng-click="setAvail(person, $index, 0.5)">(&#x2713;)</li>
+					<li class="clickable notavailable" title="out of office" ng-click="setAvail(person, $index, 2)">O</li>
+				    <li class="clickable notavailable" title="busy" ng-click="setAvail(person, $index, 3)">X</li>
+				    <li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person, $index, 4)">:(</li>
 				</ul>
 			</td>
 		</tr>

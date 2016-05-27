@@ -1,5 +1,10 @@
 var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
 
+var emptySprint = {
+	"developers": [],
+	"nondevelopers": []
+};
+
 var clone = function (obj) {
 	return angular.copy(obj);
 };
@@ -9,11 +14,6 @@ var isEqual = function(o1, o2) {
 	return angular.equals(o1, o2) ;
 };
 
-
-var emptySprint = {
-	"developers": [],
-	"nondevelopers": []
-};
 
 var getMarkup = function(availability) {
 	switch(availability) {
@@ -102,12 +102,6 @@ var availabilityPopup = function(id) {
 };
 
 
-var setAvail = function(array, index, value) {
-	array[index] = value;
-	$('.hideonupcoming').show();
-	$("ul").hide();
-};
-
 var statusPopup = function(id) {
 	var currentPopup = $('#' + id),
 		allPopups = $("ul");
@@ -119,26 +113,34 @@ var statusPopup = function(id) {
 	}
 };
 
-var setSprintStatus = function(sprint, status) {
-	$("ul").hide();
-	sprint.status = status;
-};
-
 var getClassForStatus = function(status) {
 	return getStatusText(status).replace(/\s/g, "_");
-};
-
-var saveSprintData = function(json) {
-
 };
 
 availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.sprint = emptySprint;
 
-	$http.get('single-sprint.json').success(function(res){
+	$http.get('/boards/0815').success(function(res){
 		$scope.sprint = res;
 		$scope.sprintLast = clone(res);
 	});
+
+	$scope.saveSprint = function() {
+		console.log("saving");
+
+		$http.get('/boards/0815').success(function(res){
+			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
+			console.log(res);
+			if (isEqual(res, $scope.sprintLast)) {
+				$http.post('/boards/0815', $scope.sprint);
+				$scope.sprintLast = clone($scope.sprint);
+			} else {
+				$scope.sprint = res;
+				$scope.sprintLast = clone(res);
+				$('#saveerror').show();
+			}
+		});
+	};
 
 	$scope.calculateDevDays = calculateDevDays;
 	$scope.percentTotal = percentTotal;
@@ -151,25 +153,16 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.isNotClosed = $scope.sprint.status !== 'closed';
 	$scope.isInProgress = $scope.sprint.status === 'in progress';
 	$scope.statusPopup = statusPopup;
-	$scope.setAvail = setAvail;
-	$scope.setSprintStatus = setSprintStatus;
-	$scope.saveSprint = function() {
-		console.log("saving");
-
-		$http.get('single-sprint.json').success(function(res){
-			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
-			console.log(res);
-			if (isEqual(res, $scope.sprintLast)) {
-				$http.post('/boards', $scope.sprint);
-				$scope.sprintLast = clone($scope.sprint);
-			} else {
-				$scope.sprint = res;
-				$scope.sprintLast = clone(res);
-				$('#saveerror').show();
-			}
-		});
-
-
+	$scope.setAvail = function(person, index, value) {
+		person.days[index] = value;
+		$('.hideonupcoming').show();
+		$("ul").hide();
+		// TODO: save avail
+	};
+	$scope.setSprintStatus = function(sprint) {
+		$("ul").hide();
+		sprint.status = status;
+		// TODO: save status
 	};
 });
 
