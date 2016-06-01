@@ -100,6 +100,10 @@ th:first-child, td:first-child {
 	padding: 0.5em;
 }
 
+.actions .clickable {
+	display: inline;
+}
+
 .clickable:hover {
 	background: #eeeeee;
 	cursor: pointer

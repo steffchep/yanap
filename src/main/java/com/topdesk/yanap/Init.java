@@ -1,20 +1,22 @@
 package com.topdesk.yanap;
 
-import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.sql.DataSource;
+
+import com.topdesk.yanap.database.SprintDao;
+import com.topdesk.yanap.database.SprintDaoImpl;
 
 public class Init implements ServletContextListener {
 
-	@Resource(name="jdbc/yanap")
-	private DataSource dataSource;
+	private static final String PERSISTENCE_UNIT_NAME = "yanapdb";
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 
-//		event.getServletContext().setAttribute(PersonaDao.CONTEXT_NAME, new MyPersonaDao(dataSource));
-//		event.getServletContext().setAttribute(PersonaConverter.CONTEXT_NAME, new MyPersonaConverter());
+		event.getServletContext().setAttribute(SprintDao.CONTEXT_NAME, new SprintDaoImpl(emf));
 	}
 
 	@Override

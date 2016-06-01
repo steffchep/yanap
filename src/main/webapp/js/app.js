@@ -5,6 +5,13 @@ var emptySprint = {
 	"nondevelopers": []
 };
 
+var getParameterByName = function (name) {
+	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+	var results = regex.exec(location.href);
+	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
+
 var clone = function (obj) {
 	return angular.copy(obj);
 };
@@ -118,17 +125,20 @@ var getClassForStatus = function(status) {
 };
 
 availabilityBoard.controller('availabilityController', function($scope, $http) {
+	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
+	console.log("id = " + id);
 
-	$http.get('/boards/0815').success(function(res){
+	$http.get('/boards/' + id).success(function(res){
 		$scope.sprint = res;
 		$scope.sprintLast = clone(res);
 	});
 
 	$scope.saveSprint = function() {
-		console.log("saving");
+		console.log("saving " + id);
 
-		$http.get('/boards/0815').success(function(res){
+
+		$http.get('/boards/' + id).success(function(res){
 			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
 			console.log(res);
 			if (isEqual(res, $scope.sprintLast)) {
@@ -159,41 +169,19 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		$("ul").hide();
 		// TODO: save avail
 	};
-	$scope.setSprintStatus = function(sprint) {
+	$scope.setSprintStatus = function(status) {
 		$("ul").hide();
-		sprint.status = status;
+		$scope.sprint.status = status;
 		// TODO: save status
 	};
 });
 
-availabilityBoard.controller('boardListController', function($scope) {
-	 $scope.boards = [
-		 {
-		 	id: 815,
-		 	name: "My first sprint",
-		 	startDate: "2016.01.01",
-		 	endDate: "2016.01.14",
-		 	status: 3
-		 },
-		 {
-		 	id: 816,
-		 	name: "My second sprint",
-		 	startDate: "2016.01.14",
-		 	endDate: "2016.01.28",
-            status: 2
-		 },
-		 {
-		 	id: 817,
-		 	name: "My third sprint",
-		 	startDate: "2016.01.28",
-		 	endDate: "2016.02.11",
-            status: 1
-		 }
-	 ];
+availabilityBoard.controller('boardListController', function($scope, $http) {
+	$scope.boards = [];
 
-//	$scope.boards.sort(function(sprintA, sprintB) {
-//         return sprintA.startDate > sprintB.startDate ? -1 : 1;
-//	});
+	$http.get('/boards').success(function(res){
+		$scope.boards = res;
+	});
 
      $scope.getClassForStatus = getClassForStatus;
      $scope.getStatusText = getStatusText;

@@ -1,8 +1,10 @@
 package com.topdesk.yanap.web;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 
 import javax.servlet.ServletException;
@@ -10,9 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+
 public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
 	private static final String SPRINT_PATH = "src/main/webapp/single-sprint.json";
+	private static final String ALLSPRINTS_PATH = "src/main/webapp/allsprints.json";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -52,8 +57,9 @@ public class YanapServlet extends HttpServlet {
 	private void doGetAllSprints(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
 		System.err.println("Get all Sprints");
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			String tempReturn = FileUtils.readFileToString(new File(ALLSPRINTS_PATH));
 			resp.setContentType("application/json; charset=utf8");
-			writer.write("work in progress");
+			writer.write(tempReturn);
 		}
 	}
 	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
