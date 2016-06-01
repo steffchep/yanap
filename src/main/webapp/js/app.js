@@ -5,6 +5,10 @@ var emptySprint = {
 	"nondevelopers": []
 };
 
+var formatTime = function(timestamp) {
+	return moment(timestamp).format('ll');
+};
+
 var getParameterByName = function (name) {
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
 	var results = regex.exec(location.href);
@@ -21,6 +25,9 @@ var isEqual = function(o1, o2) {
 	return angular.equals(o1, o2) ;
 };
 
+var makeId = function(string) {
+	return string.replace(/\s/g, "_");
+}
 
 var getMarkup = function(availability) {
 	switch(availability) {
@@ -91,18 +98,21 @@ var percentTotal = function(developers) {
 };
 
 var availabilityPopup = function(id) {
+	console.log("popup");
 	var status = $('#sprintStatus').html(),
 		currentPopup = $('#' + id),
 		allPopups = $("ul");
 	if (status === "ended") {
 		alert("This sprint has already ended, it is read-only");
 	} else if(!currentPopup.is(":visible")) {
+	console.log("popup show");
 		allPopups.hide();
 		currentPopup.show(); // TODO: set absolute position manually
 		if	(status === "upcoming") {
 			$('.hideonupcoming').hide();
 		}
 	} else {
+		console.log("popup hide");
 		$('.hideonupcoming').show();
 		allPopups.hide();
 	}
@@ -163,6 +173,8 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.isNotClosed = $scope.sprint.status !== 'closed';
 	$scope.isInProgress = $scope.sprint.status === 'in progress';
 	$scope.statusPopup = statusPopup;
+	$scope.formatTime = formatTime;
+	$scope.makeId = makeId;
 	$scope.setAvail = function(person, index, value) {
 		person.days[index] = value;
 		$('.hideonupcoming').show();
@@ -183,6 +195,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$scope.boards = res;
 	});
 
+	 $scope.formatTime = formatTime;
      $scope.getClassForStatus = getClassForStatus;
      $scope.getStatusText = getStatusText;
 });

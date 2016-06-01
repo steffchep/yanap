@@ -1,13 +1,6 @@
 package com.topdesk.yanap.database;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +16,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "usersbysprint")
+@NamedQueries({
+	@NamedQuery(name = "UserBySprint.getById", query = "SELECT s FROM UserBySprint s WHERE s.sprint = :sprint")
+})
 public class UserBySprint {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

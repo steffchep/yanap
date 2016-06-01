@@ -2,32 +2,44 @@ package com.topdesk.yanap.database;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by stephaniep on 17.05.2016.
  */
+@RequiredArgsConstructor
 public class SprintDaoImpl implements SprintDao {
 	private final EntityManagerFactory factory;
 
-	private static final String BY_ID = " where id = ?";
-	private static final String ORDER_BY_DATE_DESC = " order by startDate desc";
-	private static final String QUERY_ALL = "select * from sprints" + BY_ID;
-	private static final String DELETE_BY_ID = "delete from sprints" + BY_ID;
-	private static final String UPDATE_BY_ID = "update sprints set name = ?, startDate = ?, endDate = ?, status = ?" + BY_ID;
-
-	public SprintDaoImpl(EntityManagerFactory factory) {
-		this.factory = factory;
-	}
-
 	@Override
 	public List<Sprint> getAll() {
-		return null;
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			TypedQuery<Sprint> query = entityManager.createNamedQuery("Sprint.getAll", Sprint.class);
+			return query.getResultList();
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 
 	@Override
 	public Sprint getById(long id) {
-		return null;
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			Sprint sprint = entityManager.find(Sprint.class, id);
+			entityManager.getTransaction().begin();
+			entityManager.merge(sprint);
+			entityManager.getTransaction().commit();
+			return sprint;
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 
 	@Override

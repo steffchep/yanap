@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -23,6 +25,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "sprints")
+@NamedQueries({
+	@NamedQuery(name = "Sprint.getAll", query = "SELECT s FROM Sprint s ORDER BY startDate DESC"),
+	@NamedQuery(name = "Sprint.getById", query = "SELECT s FROM Sprint s WHERE s.id = :id")
+})
 public class Sprint {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

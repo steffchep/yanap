@@ -1,18 +1,21 @@
 package com.topdesk.yanap.web;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
+import com.google.gson.Gson;
+import com.topdesk.yanap.database.SprintDao;
+import com.topdesk.yanap.database.UserBySprint;
+import com.topdesk.yanap.database.UserBySprintDao;
 
 public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
@@ -56,19 +59,27 @@ public class YanapServlet extends HttpServlet {
 
 	private void doGetAllSprints(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
 		System.err.println("Get all Sprints");
+		SprintDao dao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
+
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			String tempReturn = FileUtils.readFileToString(new File(ALLSPRINTS_PATH));
 			resp.setContentType("application/json; charset=utf8");
-			writer.write(tempReturn);
+			new Gson().toJson(dao.getAll(), writer);
 		}
 	}
 	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
-		String sprintId = req.getRequestURI().replace("/boards/", "");
-		System.err.println("Get single sprint: " + sprintId);
+		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
+		UserBySprintDao userBySprintDao = (UserBySprintDao) getServletContext().getAttribute(UserBySprintDao.CONTEXT_NAME);
+
+		String sprintIdFromRequest = req.getRequestURI().replace("/boards/", "");
+		long numericSprintId = Long.parseLong(sprintIdFromRequest); // it's okay for now to show a 500 page
+
+		System.err.println("Get single sprint: " + numericSprintId);
+
+		List<UserBySprint> userList = userBySprintDao.getAll(sprintDao.getById(numericSprintId));
+
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			String tempReturn = FileUtils.readFileToString(new File(SPRINT_PATH));
 			resp.setContentType("application/json; charset=utf8");
-			writer.write(tempReturn);
+			new Gson().toJson(new SprintAndUsers(userList), writer);
 		}
 	}
 
