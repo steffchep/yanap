@@ -196,7 +196,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.setSprintStatus = function(status) {
 		$("ul").hide();
 		$scope.sprint.status = status;
-		$scope.saveSprint();
+		saveSprint();
 	};
 });
 
