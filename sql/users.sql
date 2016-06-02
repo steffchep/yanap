@@ -6,5 +6,11 @@ CREATE TABLE "users" (
 )
 ;
 
-INSERT INTO "users" VALUES (2, 'not Steffi', b'0');
-INSERT INTO "users" VALUES (1, 'Steffi', b'1');
+INSERT INTO "users" VALUES (1, 'Dawid', b'1');
+INSERT INTO "users" VALUES (2, 'Jana', b'1');
+INSERT INTO "users" VALUES (3, 'Jessica', b'1');
+INSERT INTO "users" VALUES (4, 'Michael', b'1');
+INSERT INTO "users" VALUES (5, 'Rauf', b'1');
+INSERT INTO "users" VALUES (6, 'Steffi', b'1');
+INSERT INTO "users" VALUES (7, 'Phil', b'0');
+INSERT INTO "users" VALUES (8, 'Tom', b'0');

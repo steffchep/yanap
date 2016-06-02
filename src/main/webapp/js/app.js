@@ -31,6 +31,8 @@ var makeId = function(string) {
 
 var getMarkup = function(availability) {
 	switch(availability) {
+		case 0:
+			return { class: "noneselected", character : "?"};
 		case 1:
 			return { class: "available", character : "&#x2713;"};
 		case 0.5:
@@ -42,7 +44,7 @@ var getMarkup = function(availability) {
 		case 4:
 			return { class: "notavailable", character : ":("};
 		default:
-			return { class: "noneselected", character : "?"};
+			return { class: "noneselected", character : availability};
 	}
 };
 

@@ -18,7 +18,7 @@ public class SprintAndUsers {
 	class UserAndDays {
 		long id;
 		String name;
-		List<Integer> days;
+		List<Float> days;
 	}
 	long id;
 	String name;
