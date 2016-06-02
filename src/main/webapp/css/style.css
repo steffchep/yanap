@@ -131,7 +131,7 @@ th:first-child, td:first-child {
 	color: orange;
 }
 
-#saveerror {
+.errorpopup {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -140,7 +140,7 @@ th:first-child, td:first-child {
 	background-color: rgba(0,0,0,0.4);
 }
 
-#saveerror span {
+.errorpopup span {
 	float: right;
 	color: red;
 	display: inline-block;
@@ -150,7 +150,7 @@ th:first-child, td:first-child {
 	margin-right: -3em;
 }
 
-#saveerror div {
+.errorpopup div {
 	width: 300px;
 	margin: 10% auto;
 	padding: 2em;

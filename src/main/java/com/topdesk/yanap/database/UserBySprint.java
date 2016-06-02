@@ -17,7 +17,8 @@ import lombok.ToString;
 @Entity
 @Table(name = "usersbysprint")
 @NamedQueries({
-	@NamedQuery(name = "UserBySprint.getById", query = "SELECT s FROM UserBySprint s WHERE s.sprint = :sprint ORDER BY user.name")
+	@NamedQuery(name = "UserBySprint.getBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint = :sprint ORDER BY user.name"),
+	@NamedQuery(name = "UserBySprint.getSingleBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint.id = :sprintId AND s.user.id = :userId")
 })
 public class UserBySprint {
 	@Id
@@ -53,4 +54,39 @@ public class UserBySprint {
 	@Column(name="day10")
 	private float day10;
 
+	public void setDayByIndex(int index, float value) {
+		// this ought to be possible to do more simply...
+		switch (index) {
+			case 0:
+				setDay01(value);
+				break;
+			case 1:
+				setDay02(value);
+				break;
+			case 2:
+				setDay03(value);
+				break;
+			case 3:
+				setDay04(value);
+				break;
+			case 4:
+				setDay05(value);
+				break;
+			case 5:
+				setDay06(value);
+				break;
+			case 6:
+				setDay07(value);
+				break;
+			case 7:
+				setDay08(value);
+				break;
+			case 8:
+				setDay09(value);
+				break;
+			case 9:
+				setDay10(value);
+				break;
+		}
+	}
 }

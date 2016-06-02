@@ -7,7 +7,8 @@ import java.util.List;
  */
 public interface UserBySprintDao {
 	String CONTEXT_NAME = "UserBySprintDao";
-	List<UserBySprint> getAll(Sprint sprint);
+	List<UserBySprint> getAllForSprint(Sprint sprint);
+	UserBySprint saveAvailability(long sprintId, long userId, int index, float value);
 	void deleteBySprint(Sprint sprint);
 	List<UserBySprint> createForSprint(long sprintId, List<User> users);
 }

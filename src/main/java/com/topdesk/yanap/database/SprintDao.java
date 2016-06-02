@@ -10,6 +10,7 @@ public interface SprintDao {
 
 	List<Sprint> getAll();
 	Sprint getById(long id);
+	Sprint update(Sprint sprint);
 	Sprint delete(Sprint sprint);
 	Sprint create(Sprint newSprint);
 }

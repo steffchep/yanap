@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.UserBySprint;
@@ -13,8 +15,12 @@ import com.topdesk.yanap.database.UserBySprint;
  * Created by stephaniep on 01.06.2016.
  */
 @Getter
+@EqualsAndHashCode
+@ToString
 public class SprintAndUsers {
 	@Getter
+	@EqualsAndHashCode
+	@ToString
 	class UserAndDays {
 		long id;
 		String name;
@@ -62,5 +68,16 @@ public class SprintAndUsers {
 				}
 			}
 		}
+	}
+
+	public Sprint getSprint() {
+		Sprint sprint = new Sprint();
+		sprint.setId(id);
+		sprint.setName(name);
+		sprint.setEndDate(endDate);
+		sprint.setStartDate(startDate);
+		sprint.setStatus(status);
+
+		return sprint;
 	}
 }

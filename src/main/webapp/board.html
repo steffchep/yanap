@@ -11,7 +11,7 @@
 </head>
 
 <body>
-	<h1>{{sprint.name}} <button ng-click="saveSprint()">Save</button></h1>
+	<h1>{{sprint.name}}</h1>
 	<h2>Start: {{formatTime(sprint.startDate)}} - End: {{formatTime(sprint.endDate)}} -  Status:
 		<span>
 			<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</span> (click to change)
@@ -82,10 +82,16 @@
 	<div class="legend">
 		<a class="clickable" href="index.html">&raquo; Return to list</a>
 	</div>
-	<div style="display:none" id="saveerror" onclick="$('#saveerror').hide();">
+	<div class="errorpopup" style="display:none" id="saveerror" onclick="$('#saveerror').hide();">
 		<div>
 			<span>x</span>
-			Could not save: data was changed by someone else.
+			Could not save, something went wrong.
+		</div>
+	</div>
+	<div class="errorpopup" style="display:none" id="loaderror" onclick="$('#loaderror').hide();">
+		<div>
+			<span>x</span>
+			Could not load the data.
 		</div>
 	</div>
 </body>

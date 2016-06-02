@@ -19,7 +19,7 @@ public class SprintDaoImpl implements SprintDao {
 	public List<Sprint> getAll() {
 		EntityManager entityManager = factory.createEntityManager();
 		try {
-			TypedQuery<Sprint> query = entityManager.createNamedQuery("Sprint.getAll", Sprint.class);
+			TypedQuery<Sprint> query = entityManager.createNamedQuery("Sprint.getAllForSprint", Sprint.class);
 			return query.getResultList();
 		}
 		finally {
@@ -36,6 +36,26 @@ public class SprintDaoImpl implements SprintDao {
 			entityManager.merge(sprint);
 			entityManager.getTransaction().commit();
 			return sprint;
+		}
+		finally {
+			entityManager.close();
+		}
+	}
+
+	@Override
+	public Sprint update(Sprint sprint) {
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			Sprint update = entityManager.find(Sprint.class, sprint.getId());
+			update.setStatus(sprint.getStatus());
+			update.setName(sprint.getName());
+			update.setEndDate(sprint.getEndDate());
+			update.setStartDate(sprint.getStartDate());
+
+			entityManager.getTransaction().begin();
+			entityManager.merge(update);
+			entityManager.getTransaction().commit();
+			return update;
 		}
 		finally {
 			entityManager.close();

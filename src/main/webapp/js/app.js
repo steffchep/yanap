@@ -6,7 +6,8 @@ var emptySprint = {
 };
 
 var formatTime = function(timestamp) {
-	return moment(timestamp).format('ll');
+	var formatMe = new Date(timestamp); // work around deprecation warning
+	return moment(formatMe).format('ll');
 };
 
 var getParameterByName = function (name) {
@@ -107,14 +108,12 @@ var availabilityPopup = function(id) {
 	if (status === "ended") {
 		alert("This sprint has already ended, it is read-only");
 	} else if(!currentPopup.is(":visible")) {
-	console.log("popup show");
 		allPopups.hide();
 		currentPopup.show(); // TODO: set absolute position manually
 		if	(status === "upcoming") {
 			$('.hideonupcoming').hide();
 		}
 	} else {
-		console.log("popup hide");
 		$('.hideonupcoming').show();
 		allPopups.hide();
 	}
@@ -144,23 +143,28 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$http.get('/boards/' + id).success(function(res){
 		$scope.sprint = res;
 		$scope.sprintLast = clone(res);
+	}).error(function(err) {
+		$('#loaderror').show();
+		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));
 	});
 
-	$scope.saveSprint = function() {
+	var saveSprint = function() {
 		console.log("saving " + id);
-
 
 		$http.get('/boards/' + id).success(function(res){
 			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
 			console.log(res);
 			if (isEqual(res, $scope.sprintLast)) {
-				$http.post('/boards/0815', $scope.sprint);
+				$http.post('/boards', $scope.sprint);
 				$scope.sprintLast = clone($scope.sprint);
 			} else {
 				$scope.sprint = res;
 				$scope.sprintLast = clone(res);
 				$('#saveerror').show();
 			}
+		}).error(function(err) {
+			$('#saveerror').show();
+			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
 		});
 	};
 
@@ -181,12 +185,19 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		person.days[index] = value;
 		$('.hideonupcoming').show();
 		$("ul").hide();
-		// TODO: save avail
+		$http.post('boards/' + id + "/availability", { "userId" : person.id, "dayIndex" : index, "value" : value})
+			.success(function(res) {
+				console.log("save property okay!");
+			})
+			.error(function(err) {
+				$('#saveerror').show();
+				console.log("Error saving the Data: " + JSON.stringify(err, null, " "));
+			});
 	};
 	$scope.setSprintStatus = function(status) {
 		$("ul").hide();
 		$scope.sprint.status = status;
-		// TODO: save status
+		$scope.saveSprint();
 	};
 });
 
