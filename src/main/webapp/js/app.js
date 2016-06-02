@@ -101,7 +101,6 @@ var percentTotal = function(developers) {
 };
 
 var availabilityPopup = function(id) {
-	console.log("popup");
 	var status = $('#sprintStatus').html(),
 		currentPopup = $('#' + id),
 		allPopups = $("ul");
