@@ -83,6 +83,7 @@ a, a:visited {
 td a {
 	display: block;
 	margin: 0;
+	padding: 0.5em;
 }
 
 tr.new td {
@@ -134,6 +135,9 @@ th:first-child, td:first-child {
 .clickable {
 	margin: 0;
 	padding: 0.5em;
+}
+td.clickable {
+	padding: 0;
 }
 
 .actions .clickable {
