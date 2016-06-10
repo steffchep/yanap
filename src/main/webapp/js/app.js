@@ -10,12 +10,51 @@ var formatTime = function(timestamp) {
 	return moment(formatMe).format('ll');
 };
 
+var checkDateSanity = function(sprint) {
+	var start = moment(new Date(sprint.startDate));
+	var end = moment(new Date(sprint.endDate));
+	return start.isBefore(end);
+};
+
+var checkInput = function($scope) {
+	$scope.lastError = "";
+	if (!$scope.newSprint.name || !$scope.newSprint.name === '') {
+		$scope.lastError = "Sprint name must be set!<br>";
+		$('#newSprintName').addClass("error");
+	}
+	if (!$scope.newSprint.team || !$scope.newSprint.team === '') {
+		$scope.lastError += "Team must be set!<br>";
+		$('#newSprintTeam').addClass("error");
+	}
+
+	var datesValid = true;
+	if (!moment($scope.newSprint.startDate, 'YYYY-MM-DD', true).isValid() ) {
+		$scope.lastError += "StartDate must be valid!<br>";
+		$('#newSprintStart').addClass("error");
+		datesValid = false;
+	}
+	if (!moment($scope.newSprint.endDate, 'YYYY-MM-DD', true).isValid() ) {
+		$scope.lastError += "EndDate must be valid!<br>";
+		$('#newSprintEnd').addClass("error");
+		datesValid = false;
+	}
+	if (datesValid && !checkDateSanity($scope.newSprint) ) {
+		$scope.lastError += "EndDate must be after StartDate!<br>";
+		$('#newSprintEnd').addClass("error");
+	}
+
+	if ($scope.lastError !== '') {
+		$('#saveerror').show();
+		return false;
+	}
+	return true;
+}
+
 var getParameterByName = function (name) {
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
 	var results = regex.exec(location.href);
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
-
 
 var clone = function (obj) {
 	return angular.copy(obj);
@@ -212,7 +251,8 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.usersByTeam = [];
 
 	$scope.getUsersByTeam = function() {
-		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
+ 		$('#newSprintTeam').removeClass('error');
+ 		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
 			$scope.newSprint.users = [
 				{name: "Hans", id: 1, isDeveloper: true, team: "Abraxas"},
 				{name: "Klaus", id: 2, isDeveloper: false, team: ""},
@@ -231,8 +271,12 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$('#add_users_popup').show();
 	};
 
+	$scope.lastError = "";
+
 	$scope.createSprint = function() {
-		console.log("TODO: check and create Sprint:");
+		if (checkInput($scope)) {
+			console.log("TODO: create Sprint:");
+		}
 		console.log($scope.newSprint);
 	};
 

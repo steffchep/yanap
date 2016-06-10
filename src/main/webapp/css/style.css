@@ -99,6 +99,10 @@ tr.new input, tr.new select {
 	width: 90%;
 }
 
+tr.new input.error, tr.new select.error {
+	background: #ffdddd;
+}
+
 input[type=submit], button {
 	border: none;
 	font-weight: bold;
@@ -209,7 +213,7 @@ td.clickable {
 	margin-right: -3em;
 }
 
-.errorpopup div {
+.errorpopup > div {
 	width: 300px;
 	margin: 10% auto;
 	padding: 2em;

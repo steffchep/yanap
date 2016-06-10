@@ -38,16 +38,16 @@
 					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
-					<td><input type="text" name="newSprintName" value="" required="required" placeholder="Sprint Name" ng-model="newSprint.name"></td>
+					<td><input type="text" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
 					<td>
-						<select name="newSprintTeam" required="required" ng-model="newSprint.team" ng-change="getUsersByTeam()">
+						<select id="newSprintTeam" ng-model="newSprint.team" ng-change="getUsersByTeam()">
 							<option>Abraxas</option>
 							<option>Elwetritsch</option>
 							<option>Moby</option>
 						</select>
 					</td>
-					<td><input type="date" name="newSprintStart" value="" required="required" ng-model="newSprint.startDate"></td>
-					<td><input type="date" name="newSprintEnd" value="" required="required" ng-model="newSprint.endDate"></td>
+					<td><input type="date" id="newSprintStart" value="" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
+					<td><input type="date" id="newSprintEnd" value="" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
 					<td>
 						<button ng-click="usersPopup()">Show Users ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->
@@ -65,5 +65,13 @@
 			</table>
 		</form>
 	</div>
+	<div class="errorpopup" style="display:none" id="saveerror" onclick="$('#saveerror').hide();">
+		<div>
+			<span>x</span>
+			Could not create the Sprint: <br><br>
+			<div ng-bind-html="lastError"></div>
+		</div>
+	</div>
+
 </body>
 </html>
