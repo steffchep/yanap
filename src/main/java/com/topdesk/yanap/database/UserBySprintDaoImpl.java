@@ -1,5 +1,6 @@
 package com.topdesk.yanap.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,6 +55,24 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 
 	@Override
 	public List<UserBySprint> createForSprint(Sprint sprint, List<User> users) {
-		return null;
+		List<UserBySprint> result = new ArrayList<>();
+		EntityManager entityManager = factory.createEntityManager();
+
+		try {
+			for (User user : users) {
+				UserBySprint userBySprint = new UserBySprint();
+				userBySprint.setSprint(sprint);
+				userBySprint.setUser(user);
+				entityManager.getTransaction().begin();
+				entityManager.persist(userBySprint);
+				entityManager.getTransaction().commit();
+				result.add(userBySprint);
+			}
+		}
+		finally {
+			entityManager.close();
+		}
+
+		return result;
 	}
 }

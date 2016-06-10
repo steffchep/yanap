@@ -166,9 +166,8 @@ public class YanapServlet extends HttpServlet {
 			SprintCreationData newSprint = new Gson().fromJson(responseBody, SprintCreationData.class);
 			System.err.println(newSprint);
 			Sprint sprint = sprintDao.create(newSprint.getSprint());
-			userBySprintDao.createForSprint(sprint, userDao.getByIdList(newSprint.getUserIds()));
+			userBySprintDao.createForSprint(sprint, newSprint.getUsers());
 
-			
 			new Gson().toJson(sprint, writer);
 		}
 	}

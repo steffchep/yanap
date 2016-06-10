@@ -1,7 +1,7 @@
 CREATE TABLE "users" (
 	"id" BIGINT IDENTITY(1,1),
 	"name" VARCHAR(50) NOT NULL DEFAULT NULL,
-	"isDeveloper" BIT NOT NULL DEFAULT b'1',
+	"isDeveloper" BIT NOT NULL DEFAULT 1,
 	"team" VARCHAR(50) NULL,
 	PRIMARY KEY ("id")
 )

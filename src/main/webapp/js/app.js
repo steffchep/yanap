@@ -246,7 +246,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$scope.boards = res;
 	});
 
-	$scope.newSprint = { userIds: [] };
+	$scope.newSprint = { users: [] };
 
 	$scope.usersByTeam = [];
 
@@ -255,9 +255,9 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
  		$('#newSprintTeam').removeClass('error');
  		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
 			$http.get('/boards/users/' + $scope.newSprint.team).success(function(res){
-				$scope.newSprint.userIds = res;
+				$scope.newSprint.users = res;
 				console.log("Done fetching userlist:");
-				console.log($scope.newSprint.userIds);
+				console.log($scope.newSprint.users);
 			});
 		}
 	};
@@ -280,11 +280,15 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 				console.log("Sprint created, updating list");
 				$http.get('/boards').success(function(res){
 					$scope.boards = res;
-					$scope.newSprint = {userIds: []};
+					$scope.newSprint = {users: []};
 				});
 			});
 		}
 		console.log($scope.newSprint);
+	};
+
+	$scope.deleteSprint = function(sprint) {
+		alert("Not yet supported");
 	};
 
 	$scope.formatTime = formatTime;

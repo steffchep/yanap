@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import com.topdesk.yanap.database.Sprint;
+import com.topdesk.yanap.database.User;
 
 /**
  * Created by stephaniep on 10.06.2016.
@@ -22,7 +23,7 @@ public class SprintCreationData {
 	Date endDate;
 	int pointsPlanned;
 	int pointsCompleted;
-	List<Long> userIds;
+	List<User> users;
 
 	public Sprint getSprint() {
 		Sprint sprint = new Sprint();
