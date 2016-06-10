@@ -1,4 +1,5 @@
 <!doctype html>
+<!--suppress ALL -->
 <html ng-app="availabilityBoard" ng-controller="availabilityController">
 <head>
 	<title>{{sprint.name}}</title>
@@ -13,12 +14,13 @@
 <body>
 	<div class="content">
 		<h1>
-			"{{sprint.name}}" by team {{sprint.team}}
+			<input type="text" ng-model="sprint.name"><button ng-click="saveSprint()" title="Update changes to Sprint name, status and story points">Update</button>
 		</h1>
-		<div><a class="clickable" href="index.html">&raquo; Return to list</a></div>
+		<h1 style="display: inline;">by team {{sprint.team}}</h1>
+		<div style="display: inline"><a class="clickable" href="index.html">&raquo; Return to list</a></div>
 		<h2>Start: {{formatTime(sprint.startDate)}} - End: {{formatTime(sprint.endDate)}} -  Status:
 			<span>
-				<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</span> (click to change)
+				<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</span>,
 				<!--suppress HtmlUnknownTag -->
 				<ul id="{{sprint.id}}" style="display: none">
 					<li class="clickable upcoming" title="upcoming" ng-click="setSprintStatus(1)">upcoming</li>
@@ -26,8 +28,8 @@
 					<li class="clickable ended" title="ended" ng-click="setSprintStatus(3)">ended</li>
 				</ul>
 			</span>
-		</h2>
-		<h2>Story Points: {{sprint.pointsCompleted}}/{{sprint.pointsPlanned}}</h2>
+			Story Points done/planned:
+			<input type="text" ng-model="sprint.pointsCompleted"> /<input type="text" ng-model="sprint.pointsPlanned"></h2>
 		<table>
 			<tr>
 				<th>Name</th>

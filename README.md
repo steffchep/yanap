@@ -2,10 +2,7 @@
 Yet Another Availabilty Planner
 
 TODOS:
-- create new Sprint / usersBySprint
-- enable change of sprint name (board.html)
-- enable entry of story points (board.html)
-- add users
+- show a spinner while saving sprint data
 - delete Sprint and usersBySprint
 
 Features under consideration:

@@ -60,15 +60,6 @@ var getParameterByName = function (name) {
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-var clone = function (obj) {
-	return angular.copy(obj);
-};
-
-
-var isEqual = function(o1, o2) {
-	return angular.equals(o1, o2) ;
-};
-
 var makeId = function(string) {
 	return string.replace(/\s/g, "_");
 }
@@ -184,7 +175,6 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 	$http.get('/boards/' + id).success(function(res){
 		$scope.sprint = res;
-		$scope.sprintLast = clone(res);
 	}).error(function(err) {
 		$('#loaderror').show();
 		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));
@@ -193,23 +183,14 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	var saveSprint = function() {
 		console.log("saving " + id);
 
-		$http.get('/boards/' + id).success(function(res){
-			console.log("copies equal ? " + isEqual(res, $scope.sprintLast));
-			console.log(res);
-			if (isEqual(res, $scope.sprintLast)) {
-				$http.post('/boards', $scope.sprint);
-				$scope.sprintLast = clone($scope.sprint);
-			} else {
-				$scope.sprint = res;
-				$scope.sprintLast = clone(res);
-				$('#saveerror').show();
-			}
-		}).error(function(err) {
+		$http.post('/boards', $scope.sprint)
+		.error(function(err) {
 			$('#saveerror').show();
 			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
 		});
 	};
 
+	$scope.saveSprint = saveSprint;
 	$scope.calculateDevDays = calculateDevDays;
 	$scope.percentTotal = percentTotal;
 	$scope.totalDays = totalDays;
@@ -239,7 +220,6 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.setSprintStatus = function(status) {
 		$("ul").hide();
 		$scope.sprint.status = status;
-		saveSprint();
 	};
 });
 

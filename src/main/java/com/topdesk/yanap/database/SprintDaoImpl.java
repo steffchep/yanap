@@ -59,16 +59,10 @@ public class SprintDaoImpl implements SprintDao {
 	public Sprint update(Sprint sprint) {
 		EntityManager entityManager = factory.createEntityManager();
 		try {
-			Sprint update = entityManager.find(Sprint.class, sprint.getId());
-			update.setStatus(sprint.getStatus());
-			update.setName(sprint.getName());
-			update.setEndDate(sprint.getEndDate());
-			update.setStartDate(sprint.getStartDate());
-
 			entityManager.getTransaction().begin();
-			entityManager.merge(update);
+			entityManager.merge(sprint);
 			entityManager.getTransaction().commit();
-			return update;
+			return sprint;
 		}
 		finally {
 			entityManager.close();
