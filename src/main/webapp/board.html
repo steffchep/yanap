@@ -14,8 +14,8 @@
 	<div class="content">
 		<h1>
 			"{{sprint.name}}" by team {{sprint.team}}
-			<a class="clickable" href="index.html">&raquo; Return to list</a>
 		</h1>
+		<div><a class="clickable" href="index.html">&raquo; Return to list</a></div>
 		<h2>Start: {{formatTime(sprint.startDate)}} - End: {{formatTime(sprint.endDate)}} -  Status:
 			<span>
 				<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</span> (click to change)

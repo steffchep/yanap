@@ -25,6 +25,7 @@ import lombok.ToString;
 @Table(name = "users")
 @NamedQueries({
 	@NamedQuery(name = "User.getByTeam", query = "SELECT u FROM User u WHERE u.team = :team OR u.team = '' ORDER BY name"),
+	@NamedQuery(name = "User.getAll", query = "SELECT u FROM User u ORDER BY name"),
 	@NamedQuery(name = "User.getByIdList", query = "SELECT u FROM User u WHERE u.id in :ids ORDER BY name"),
 })
 public class User {

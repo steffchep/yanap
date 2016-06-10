@@ -32,10 +32,24 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<User> getByTeam(String team) {
+		if ("all".equals(team)) {
+			return getAll();
+		}
 		EntityManager entityManager = factory.createEntityManager();
 		try {
 			TypedQuery<User> query = entityManager.createNamedQuery("User.getByTeam", User.class);
 			query.setParameter("team", team);
+			return query.getResultList();
+		}
+		finally {
+			entityManager.close();
+		}
+	}
+
+	private List<User> getAll() {
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			TypedQuery<User> query = entityManager.createNamedQuery("User.getAll", User.class);
 			return query.getResultList();
 		}
 		finally {
@@ -57,7 +71,16 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User create(String name, boolean isDeveloper) {
-		return null;
+	public User create(User newUser) {
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newUser);
+			entityManager.getTransaction().commit();
+			return newUser;
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 }

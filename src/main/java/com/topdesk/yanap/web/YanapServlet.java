@@ -24,7 +24,7 @@ public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
 
 	private static final String ROOT_URL = "/boards";
-	private static final String USER_BY_TEAM_URL = ROOT_URL + "/users/";
+	private static final String USER_BY_TEAM_URL = ROOT_URL + "/users";
 	private static final String AVAILABILITY_SUB_URL = "/availability";
 	private static final String JSON_TYPE = "application/json; charset=utf8";
 
@@ -87,7 +87,7 @@ public class YanapServlet extends HttpServlet {
 	private void doGetUserList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
 
-		String team = req.getRequestURI().replace(USER_BY_TEAM_URL, "");
+		String team = req.getRequestURI().replace(USER_BY_TEAM_URL + "/", "");
 		System.err.println("Get user list for: " + team);
 
 		List<User> userList = userDao.getByTeam(team);
@@ -173,7 +173,22 @@ public class YanapServlet extends HttpServlet {
 	}
 	
 	private void doCreateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
+
+		System.err.println("Create User");
+
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+
+			String responseBody = getResponseBodyAsString(req);
+
+			Gson gson = new GsonBuilder().create();
+			System.err.println(responseBody);
+			User newUser = new Gson().fromJson(responseBody, User.class);
+			userDao.create(newUser);
+
+			new Gson().toJson(newUser, writer);
+		}
 	}
 	
 	private String getNumberFromString(String string) {

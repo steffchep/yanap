@@ -16,7 +16,7 @@ var checkDateSanity = function(sprint) {
 	return start.isBefore(end);
 };
 
-var checkInput = function($scope) {
+var checkSprintInput = function($scope) {
 	$scope.lastError = "";
 	if (!$scope.newSprint.name || !$scope.newSprint.name === '') {
 		$scope.lastError = "Sprint name must be set!<br>";
@@ -49,6 +49,10 @@ var checkInput = function($scope) {
 	}
 	return true;
 }
+
+var checkUser = function(user) {
+	return true;
+};
 
 var getParameterByName = function (name) {
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
@@ -274,7 +278,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.lastError = "";
 
 	$scope.createSprint = function() {
-		if (checkInput($scope)) {
+		if (checkSprintInput($scope)) {
 			console.log("create Sprint");
 			$http.put('/boards', $scope.newSprint).success(function(res){
 				console.log("Sprint created, updating list");
@@ -294,4 +298,36 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.formatTime = formatTime;
     $scope.getClassForStatus = getClassForStatus;
     $scope.getStatusText = getStatusText;
+});
+
+availabilityBoard.controller('userListController', function($scope, $http) {
+	$scope.users = [];
+	$scope.newUser = {};
+
+	$scope.getUsers = function(team) {
+		$http.get('/boards/users/' + (team || "all")).success(function(res){
+			$scope.users = res;
+			console.log("Done fetching userlist:");
+			console.log($scope.users);
+		});
+	};
+
+	$scope.createUser = function() {
+		if (checkUser($scope.newUser)) {
+			console.log("create User");
+			$http.put('/boards/users', $scope.newUser).success(function(res){
+				console.log("User created, updating list");
+				$scope.newUser = {};
+				$scope.getUsers();
+			});
+		}
+		console.log($scope.newUser);
+	};
+
+	$scope.deleteUser = function(user) {
+		alert("Not yet supported");
+	};
+
+	$scope.getUsers();
+
 });
