@@ -11,5 +11,5 @@ public interface UserBySprintDao {
 	List<UserBySprint> getAllForSprint(Sprint sprint);
 	UserBySprint saveAvailability(long sprintId, long userId, int index, float value);
 	void deleteBySprint(Sprint sprint);
-	List<UserBySprint> createForSprint(long sprintId, List<User> users);
+	List<UserBySprint> createForSprint(Sprint sprint, List<User> users);
 }

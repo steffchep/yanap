@@ -10,6 +10,6 @@ public interface UserDao {
 
 	User getById(long id);
 	List<User> getByTeam(String team);
-	User delete(User user);
+	List<User> getByIdList(List<Long> userIds);
 	User create(String name, boolean isDeveloper);
 }

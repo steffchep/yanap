@@ -44,8 +44,16 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User delete(User user) {
-		return null;
+	public List<User> getByIdList(List<Long> userIds) {
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			TypedQuery<User> query = entityManager.createNamedQuery("User.getByIdList", User.class);
+			query.setParameter("ids", userIds);
+			return query.getResultList();
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 	}
 
 	@Override
-	public List<UserBySprint> createForSprint(long sprintId, List<User> users) {
+	public List<UserBySprint> createForSprint(Sprint sprint, List<User> users) {
 		return null;
 	}
 }

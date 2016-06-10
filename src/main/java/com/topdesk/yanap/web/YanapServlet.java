@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.SprintDao;
 import com.topdesk.yanap.database.User;
 import com.topdesk.yanap.database.UserBySprint;
@@ -52,12 +53,19 @@ public class YanapServlet extends HttpServlet {
 
 	@Override
 	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType(JSON_TYPE);
-			writer.write("PUT work in progress");
+		if (req.getRequestURI().equals(ROOT_URL)) {
+			doCreateSprint(req, resp);
+		} else if (req.getRequestURI().equals(USER_BY_TEAM_URL)) {
+			doCreateUser(req, resp);
+		} else {
+			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+				resp.setContentType(JSON_TYPE);
+				resp.setStatus(400);
+				writer.write("not recognized");
+			}
 		}
 	}
-
+	
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
@@ -106,7 +114,7 @@ public class YanapServlet extends HttpServlet {
 			new Gson().toJson(new SprintAndUsers(userList), writer);
 		}
 	}
-
+	
 	private void doSaveSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
@@ -138,10 +146,37 @@ public class YanapServlet extends HttpServlet {
 			userBySprintDao.saveAvailability(Long.parseLong(sprintId),
 				updateData.getUserId(), updateData.getDayIndex(), updateData.getValue());
 
-			writer.write("ok");
+			writer.write(responseBody);
 		}
 	}
+	
+	private void doCreateSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
+		UserBySprintDao userBySprintDao = (UserBySprintDao) getServletContext().getAttribute(UserBySprintDao.CONTEXT_NAME);
+		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
 
+		System.err.println("Create Sprint");
+
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+			
+			String responseBody = getResponseBodyAsString(req);
+
+			Gson gson = new GsonBuilder().create();
+			SprintCreationData newSprint = new Gson().fromJson(responseBody, SprintCreationData.class);
+			System.err.println(newSprint);
+			Sprint sprint = sprintDao.create(newSprint.getSprint());
+			userBySprintDao.createForSprint(sprint, userDao.getByIdList(newSprint.getUserIds()));
+
+			
+			new Gson().toJson(sprint, writer);
+		}
+	}
+	
+	private void doCreateUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	}
+	
 	private String getNumberFromString(String string) {
 		return string.replaceAll("\\D", "");
 	}

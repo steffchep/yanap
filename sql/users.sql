@@ -1,16 +1,16 @@
 CREATE TABLE "users" (
-	"id" BIGINT NOT NULL DEFAULT NULL,
+	"id" BIGINT IDENTITY(1,1),
 	"name" VARCHAR(50) NOT NULL DEFAULT NULL,
 	"isDeveloper" BIT NOT NULL DEFAULT b'1',
 	"team" VARCHAR(50) NULL,
 	PRIMARY KEY ("id")
 )
 ;
-INSERT INTO "users" VALUES (1, 'Dawid', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (2, 'Jana', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (3, 'Jessica', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (4, 'Michael', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (5, 'Rauf', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (6, 'Steffi', b'1', 'Abraxas');
-INSERT INTO "users" VALUES (7, 'Phil', b'0', '');
-INSERT INTO "users" VALUES (8, 'Tom', b'0', '');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Dawid', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Jana', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Jessica', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Michael', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Rauf', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Steffi', 1, 'Abraxas');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Phil', 0, '');
+INSERT INTO "users" (name, isDeveloper, team) VALUES ('Tom', 0, '');

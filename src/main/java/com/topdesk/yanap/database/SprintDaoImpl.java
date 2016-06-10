@@ -81,7 +81,17 @@ public class SprintDaoImpl implements SprintDao {
 	}
 
 	@Override
+
 	public Sprint create(Sprint newSprint) {
-		return null;
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+			entityManager.persist(newSprint);
+			entityManager.getTransaction().commit();
+			return newSprint;
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 }

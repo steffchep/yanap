@@ -1,6 +1,6 @@
 CREATE TABLE "sprints" (
-	"id" BIGINT NOT NULL DEFAULT NULL,
-	"name" VARCHAR(255) NOT NULL DEFAULT NULL,
+	"id" BIGINT IDENTITY(1,1),
+	"name" VARCHAR(255) NOT NULL,
 	"startDate" DATE NOT NULL DEFAULT NULL,
 	"endDate" DATE NOT NULL DEFAULT NULL,
 	"status" INT NOT NULL DEFAULT '1',
@@ -11,4 +11,4 @@ CREATE TABLE "sprints" (
 )
 ;
 
-INSERT INTO "sprints" VALUES (1, 'My First Sprint', '2016-05-17', '2016-05-19', 1, "Abraxas", NULL, NULL);
+INSERT INTO "sprints" (name, startDate, endDate, status, team, pointsplanned, pointscompleted) VALUES ('My First Sprint', '2016-05-17', '2016-05-19', 1, 'Abraxas', 0, 0);
