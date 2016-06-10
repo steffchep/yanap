@@ -26,8 +26,8 @@ import lombok.ToString;
 @Entity
 @Table(name = "sprints")
 @NamedQueries({
-	@NamedQuery(name = "Sprint.getAllForSprint", query = "SELECT s FROM Sprint s ORDER BY startDate DESC"),
-	@NamedQuery(name = "Sprint.getById", query = "SELECT s FROM Sprint s WHERE s.id = :id")
+	@NamedQuery(name = "Sprint.getAll", query = "SELECT s FROM Sprint s ORDER BY startDate DESC"),
+	@NamedQuery(name = "Sprint.getByTeam", query = "SELECT s FROM Sprint s WHERE s.team = :team ORDER BY startDate DESC" )
 })
 public class Sprint {
 	@Id

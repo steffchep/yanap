@@ -251,15 +251,15 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.usersByTeam = [];
 
 	$scope.getUsersByTeam = function() {
+		$('#add_users_popup').hide();
  		$('#newSprintTeam').removeClass('error');
  		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
-			$scope.newSprint.users = [
-				{name: "Hans", id: 1, isDeveloper: true, team: "Abraxas"},
-				{name: "Klaus", id: 2, isDeveloper: false, team: ""},
-				{name: "Walter", id: 3, isDeveloper: true, team: "Abraxas"}
-			];
+			$http.get('/boards/users/' + $scope.newSprint.team).success(function(res){
+				$scope.newSprint.users = res;
+				console.log("Done fetching userlist:");
+				console.log($scope.newSprint.users);
+			});
 		}
-		console.log("TODO: fetch list of users for team " + $scope.newSprint.team + " from backend");
 	};
 
 	$scope.usersPopup = function() {
@@ -280,7 +280,6 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		console.log($scope.newSprint);
 	};
 
-    $scope.userCount = 0;
 	$scope.formatTime = formatTime;
     $scope.getClassForStatus = getClassForStatus;
     $scope.getStatusText = getStatusText;

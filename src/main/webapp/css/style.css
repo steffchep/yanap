@@ -118,6 +118,20 @@ tr.new input[type=checkbox] {
 
 tr.new li {
 	text-align: left;
+	padding: 0.2em 0.5em;
+}
+
+tr.new li:first-child {
+	padding: 0.5em;
+	display: block;
+}
+
+tr.new li b {
+	display: block;
+}
+
+tr.new li:last-child {
+	text-align: right;
 	padding: 0.5em;
 }
 

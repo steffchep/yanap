@@ -49,14 +49,15 @@
 					<td><input type="date" id="newSprintStart" value="" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
 					<td><input type="date" id="newSprintEnd" value="" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
 					<td>
-						<button ng-click="usersPopup()">Show Users ({{newSprint.users.length}})</button>
+						<button ng-click="usersPopup()">Show Members ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->
 						<ul id="add_users_popup" style="display: none" onclick="$('#add_users_popup').hide();">
 							<li id="error_no_team" style="display: none">Please select a team first!</li>
+							<li id="team_members" ng-show="newSprint.users.length > 0"><b>These People will be added:</b></li>
 							<li ng-repeat = "user in newSprint.users" title="users to be added">
 								{{user.name}}
 							</li>
-							<li><button onclick="$('#add_users_popup').hide();">Done</button></li>
+							<li><button onclick="$('#add_users_popup').hide();">OK</button></li>
 						</ul>
 
 					</td>

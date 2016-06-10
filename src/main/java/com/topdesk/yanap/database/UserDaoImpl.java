@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +32,15 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public List<User> getByTeam(String team) {
-		return null;
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			TypedQuery<User> query = entityManager.createNamedQuery("User.getByTeam", User.class);
+			query.setParameter("team", team);
+			return query.getResultList();
+		}
+		finally {
+			entityManager.close();
+		}
 	}
 
 	@Override

@@ -14,18 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.topdesk.yanap.database.SprintDao;
+import com.topdesk.yanap.database.User;
 import com.topdesk.yanap.database.UserBySprint;
 import com.topdesk.yanap.database.UserBySprintDao;
+import com.topdesk.yanap.database.UserDao;
 
 public class YanapServlet extends HttpServlet {
 	private static final long serialVersionUID = -8290236007841458135L;
-	private static final String SPRINT_PATH = "src/main/webapp/single-sprint.json";
-	private static final String ALLSPRINTS_PATH = "src/main/webapp/allsprints.json";
+
+	private static final String ROOT_URL = "/boards";
+	private static final String USER_BY_TEAM_URL = ROOT_URL + "/users/";
+	private static final String AVAILABILITY_SUB_URL = "/availability";
+	private static final String JSON_TYPE = "application/json; charset=utf8";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (req.getRequestURI().equals("/boards")) {
+		if (req.getRequestURI().equals(ROOT_URL)) {
 			doGetAllSprints(req, resp);
+		} else if (req.getRequestURI().startsWith(USER_BY_TEAM_URL)) {
+			doGetUserList(req, resp);
 		} else {
 			doGetSingleSprint(req, resp);
 		}
@@ -36,9 +43,9 @@ public class YanapServlet extends HttpServlet {
 		String uri = req.getRequestURI();
 		System.err.println("URI: " + uri);
 
-		if (uri.contains("/availability")) {
+		if (uri.contains(AVAILABILITY_SUB_URL)) {
 			doSaveProperty(req, resp);
-		} else if (uri.startsWith("/boards")) {
+		} else if (uri.startsWith(ROOT_URL)) {
 			doSaveSprint(req, resp);
 		}
 	}
@@ -46,7 +53,7 @@ public class YanapServlet extends HttpServlet {
 	@Override
 	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json; charset=utf8");
+			resp.setContentType(JSON_TYPE);
 			writer.write("PUT work in progress");
 		}
 	}
@@ -54,7 +61,7 @@ public class YanapServlet extends HttpServlet {
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json; charset=utf8");
+			resp.setContentType(JSON_TYPE);
 			writer.write("DELETE work in progress");
 		}
 	}
@@ -64,11 +71,26 @@ public class YanapServlet extends HttpServlet {
 		SprintDao dao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json; charset=utf8");
+			resp.setContentType(JSON_TYPE);
 			new Gson().toJson(dao.getAll(), writer);
 		}
 	}
-	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+
+	private void doGetUserList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
+
+		String team = req.getRequestURI().replace(USER_BY_TEAM_URL, "");
+		System.err.println("Get user list for: " + team);
+
+		List<User> userList = userDao.getByTeam(team);
+
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+			new Gson().toJson(userList, writer);
+		}
+	}
+
+	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 		UserBySprintDao userBySprintDao = (UserBySprintDao) getServletContext().getAttribute(UserBySprintDao.CONTEXT_NAME);
 
@@ -80,7 +102,7 @@ public class YanapServlet extends HttpServlet {
 		List<UserBySprint> userList = userBySprintDao.getAllForSprint(sprintDao.getById(numericSprintId));
 
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json; charset=utf8");
+			resp.setContentType(JSON_TYPE);
 			new Gson().toJson(new SprintAndUsers(userList), writer);
 		}
 	}
@@ -88,7 +110,7 @@ public class YanapServlet extends HttpServlet {
 	private void doSaveSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json");
+			resp.setContentType(JSON_TYPE);
 
 			String responseBody = getResponseBodyAsString(req);
 
@@ -107,7 +129,7 @@ public class YanapServlet extends HttpServlet {
 		// currently only has availability
 
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType("application/json");
+			resp.setContentType(JSON_TYPE);
 
 			String responseBody = getResponseBodyAsString(req);
 
