@@ -18,6 +18,7 @@
 			<table>
 				<tr>
 					<th>Name</th>
+					<th>Team</th>
 					<th>Start</th>
 					<th>End</th>
 					<th>Status</th>
@@ -25,6 +26,7 @@
 				</tr>
 				<tr ng-repeat="sprint in boards">
 					<td class="clickable name"><a href="board.html?id={{sprint.id}}">{{sprint.name}}</a></td>
+					<td class="name">{{sprint.team}}</td>
 					<td class="date">{{formatTime(sprint.startDate)}}</td>
 					<td class="date">{{formatTime(sprint.endDate)}}</td>
 					<td class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</td>
@@ -33,18 +35,35 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="spacer" colspan="11"></td>
+					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
-					<td><input type="text" name="newSprintName" value="" required="required" placeholder="Sprint Name"></td>
-					<td><input type="date" name="newSprintStart" value="" required="required"></td>
-					<td><input type="date" name="newSprintEnd" value="" required="required"></td>
-					<td><div id="errormessage"></div></td>
-					<td><input type="submit" value="Add Sprint"></td>
+					<td><input type="text" name="newSprintName" value="" required="required" placeholder="Sprint Name" ng-model="newSprint.name"></td>
+					<td>
+						<select name="newSprintTeam" required="required" ng-model="newSprint.team" ng-change="getUsersByTeam()">
+							<option>Abraxas</option>
+							<option>Elwetritsch</option>
+							<option>Moby</option>
+						</select>
+					</td>
+					<td><input type="date" name="newSprintStart" value="" required="required" ng-model="newSprint.startDate"></td>
+					<td><input type="date" name="newSprintEnd" value="" required="required" ng-model="newSprint.endDate"></td>
+					<td>
+						<button ng-click="usersPopup()">Show Users ({{newSprint.users.length}})</button>
+						<!--suppress HtmlUnknownTag -->
+						<ul id="add_users_popup" style="display: none" onclick="$('#add_users_popup').hide();">
+							<li id="error_no_team" style="display: none">Please select a team first!</li>
+							<li ng-repeat = "user in newSprint.users" title="users to be added">
+								{{user.name}}
+							</li>
+							<li><button onclick="$('#add_users_popup').hide();">Done</button></li>
+						</ul>
+
+					</td>
+					<td><input type="submit" value="Add Sprint" ng-click="createSprint()"></td>
 				</tr>
 			</table>
 		</form>
 	</div>
-
 </body>
 </html>

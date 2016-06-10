@@ -60,13 +60,17 @@ ul {
 	padding: 0;
 	width: 100px;
 	background: white;
-	border: 1px solid black;
+	box-shadow: 2px 2px 4px #000;
 }
 
 h2 ul {
 	left: 35%;
 	font-size: 70%;
 	margin: -8px 10em;
+}
+
+#add_users_popup {
+	width: 200px;
 }
 
 li {
@@ -90,15 +94,27 @@ tr.new td {
 	padding: 0.5em;
 }
 
-tr.new input {
+tr.new input, tr.new select {
 	font-size: larger;
 	width: 90%;
 }
 
 input[type=submit], button {
 	border: none;
+	font-weight: bold;
 	background-color: #ddd;
 	box-shadow: 1px 1px 2px #000;
+}
+
+tr.new input[type=checkbox] {
+	border: 1px solid;
+	background: white;
+	width: auto;
+}
+
+tr.new li {
+	text-align: left;
+	padding: 0.5em;
 }
 
 button {

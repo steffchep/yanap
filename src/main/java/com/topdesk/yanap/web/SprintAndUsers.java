@@ -28,9 +28,12 @@ public class SprintAndUsers {
 	}
 	long id;
 	String name;
+	String team;
 	Date startDate;
 	Date endDate;
 	int status;
+	int pointsPlanned;
+	int pointsCompleted;
 	List<UserAndDays> developers;
 	List<UserAndDays> nondevelopers;
 
@@ -44,6 +47,9 @@ public class SprintAndUsers {
 			this.startDate = sprint.getStartDate();
 			this.endDate = sprint.getEndDate();
 			this.status = sprint.getStatus();
+			this.pointsCompleted = sprint.getPointsCompleted();
+			this.pointsPlanned = sprint.getPointsPlanned();
+			this.team = sprint.getTeam();
 
 			for (UserBySprint user : users) {
 				UserAndDays userAndDays = new UserAndDays();
@@ -77,6 +83,9 @@ public class SprintAndUsers {
 		sprint.setEndDate(endDate);
 		sprint.setStartDate(startDate);
 		sprint.setStatus(status);
+		sprint.setPointsPlanned(pointsPlanned);
+		sprint.setPointsCompleted(pointsCompleted);
+		sprint.setTeam(team);
 
 		return sprint;
 	}

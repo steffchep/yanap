@@ -45,4 +45,14 @@ public class Sprint {
 
 	@Column(name = "status")
 	private int status;
+
+	@Column(name = "team")
+	private String team;
+
+	@Column(name = "pointsplanned")
+	private int pointsPlanned;
+
+	@Column(name = "pointscompleted")
+	private int pointsCompleted;
+
 }

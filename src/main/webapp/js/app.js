@@ -207,7 +207,37 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$scope.boards = res;
 	});
 
-	 $scope.formatTime = formatTime;
-     $scope.getClassForStatus = getClassForStatus;
-     $scope.getStatusText = getStatusText;
+	$scope.newSprint = { users: []};
+
+	$scope.usersByTeam = [];
+
+	$scope.getUsersByTeam = function() {
+		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
+			$scope.newSprint.users = [
+				{name: "Hans", id: 1, isDeveloper: true, team: "Abraxas"},
+				{name: "Klaus", id: 2, isDeveloper: false, team: ""},
+				{name: "Walter", id: 3, isDeveloper: true, team: "Abraxas"}
+			];
+		}
+		console.log("TODO: fetch list of users for team " + $scope.newSprint.team + " from backend");
+	};
+
+	$scope.usersPopup = function() {
+		if (!$scope.newSprint.team || $scope.newSprint.team === '') {
+			$('#error_no_team').show();
+		} else {
+			$('#error_no_team').hide();
+		}
+		$('#add_users_popup').show();
+	};
+
+	$scope.createSprint = function() {
+		console.log("TODO: check and create Sprint:");
+		console.log($scope.newSprint);
+	};
+
+    $scope.userCount = 0;
+	$scope.formatTime = formatTime;
+    $scope.getClassForStatus = getClassForStatus;
+    $scope.getStatusText = getStatusText;
 });

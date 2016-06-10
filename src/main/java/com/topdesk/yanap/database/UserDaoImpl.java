@@ -1,5 +1,7 @@
 package com.topdesk.yanap.database;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -25,6 +27,11 @@ public class UserDaoImpl implements UserDao {
 		finally {
 			entityManager.close();
 		}
+	}
+
+	@Override
+	public List<User> getByTeam(String team) {
+		return null;
 	}
 
 	@Override
