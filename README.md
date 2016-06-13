@@ -4,6 +4,7 @@ Yet Another Availabilty Planner
 TODOS:
 - show a spinner while saving sprint data
 - delete Sprint and usersBySprint
+- change user data (team, isDev, name)
 
 Features under consideration:
 - Statistics: Charts for Availability vs Story points
