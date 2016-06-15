@@ -265,6 +265,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 				$http.get('/boards').success(function(res){
 					$scope.boards = res;
 					$scope.newSprint = {users: []};
+					$('#newSprintName').focus();
 				});
 			});
 		}
@@ -282,7 +283,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 
 availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.users = [];
-	$scope.newUser = {};
+	$scope.newUser = { team: "" };
 
 	$scope.getUsers = function(team) {
 		$http.get('/boards/users/' + (team || "all")).success(function(res){
@@ -297,8 +298,9 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 			console.log("create User");
 			$http.put('/boards/users', $scope.newUser).success(function(res){
 				console.log("User created, updating list");
-				$scope.newUser = {};
+				$scope.newUser = { team: "" };
 				$scope.getUsers();
+				$('#newUserName').focus();
 			});
 		}
 		console.log($scope.newUser);
