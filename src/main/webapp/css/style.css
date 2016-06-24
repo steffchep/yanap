@@ -64,6 +64,7 @@ h2 ul {
 }
 
 table {
+	color: #333;
 	background: transparent;
 	border-collapse: normal;
 	width: 100%;
@@ -124,6 +125,9 @@ tr.new td {
 }
 
 input, select {
+	border: 1px solid #ddd;
+	background: white;
+	color: #333;
 	font-size: larger;
 	width: 90%;
 }
