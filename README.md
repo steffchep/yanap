@@ -2,7 +2,6 @@
 Yet Another Availabilty Planner
 
 TODOS:
-- show a spinner while saving sprint data
 - Plan board: date in table header
 - Datepicker
 

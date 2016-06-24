@@ -182,10 +182,19 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 	var saveSprint = function() {
 		console.log("saving " + id);
+		var updateButton = $('#updateSprintButton');
+		updateButton.text("wait...")
+		updateButton.prop("disabled", true);
 
 		$http.post('/boards', $scope.sprint)
+		.success(function() {
+			updateButton.text("Update")
+			updateButton.prop("disabled", false);
+		})
 		.error(function(err) {
 			$('#saveerror').show();
+			updateButton.text("Update")
+			updateButton.prop("disabled", false);
 			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
 		});
 	};

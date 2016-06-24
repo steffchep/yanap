@@ -36,6 +36,8 @@ h1 a, h1 a:visited {
 h1 button {
 	float: right;
 	font-size: smaller;
+	width: 140px;
+	padding: 0.2em;
 }
 
 h1 input, h2 input {
