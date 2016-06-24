@@ -4,9 +4,7 @@ Yet Another Availabilty Planner
 TODOS:
 - show a spinner while saving sprint data
 - delete Sprint and usersBySprint
-- inline-change for existing users: Team and isDeveloper
-- change user data (team, isDev, name)
-- non-developers: enable de-select on Sprint creation
+- Datepicker
 
 Features under consideration:
 - Filter Sprint list by Team (or quick search)

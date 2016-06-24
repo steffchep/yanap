@@ -33,14 +33,14 @@
 						</select>
 					</td>
 					<td class="status">
-						<input type="checkbox" id="isDeveloper" value="1" ng-model="user.isDeveloper">
+						<input type="checkbox" id="isDeveloper" value="1" ng-model="user.isDeveloper" ng-change = "enableSaveButton('save_' + {{user.id}})">
 					</td>
 					<td class="actions">
-						<button id="save_{{user.id}}"disabled class="clickable" href="" ng-click="updateUser(user)">save</button>
+						<button id="save_{{user.id}}" disabled class="clickable" href="" ng-click="updateUser(user)">save</button>
 						<button class="clickable" href="" ng-click="deleteUser(user)">delete</button>
 					</td>
 				</tr>
-				<tr>
+				<tr class="spacer">
 					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
@@ -54,7 +54,7 @@
 						</select>
 					</td>
 					<td>
-						<input type="checkbox" id="isDeveloper" value="1" ng-model="newUser.isDeveloper"><label for="isDeveloper">Developer</label>
+						<input type="checkbox" id="isDeveloper" value="1" ng-model="newUser.isDeveloper">
 					</td>
 					<td><input type="submit" value="Add User" ng-click="createUser()"></td>
 				</tr>

@@ -34,7 +34,7 @@
 						<a class="clickable" href="" ng-click="deleteSprint(sprint)">delete</a>
 					</td>
 				</tr>
-				<tr>
+				<tr class="spacer">
 					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
@@ -46,16 +46,16 @@
 							<option>Moby</option>
 						</select>
 					</td>
-					<td><input type="date" id="newSprintStart" value="" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
-					<td><input type="date" id="newSprintEnd" value="" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
+					<td><input ui-date type="text" id="newSprintStart" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
+					<td><input ui-date type="text" id="newSprintEnd" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
 					<td>
 						<button ng-click="usersPopup()">Show Members ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->
-						<ul id="add_users_popup" style="display: none" onclick="$('#add_users_popup').hide();">
+						<ul id="add_users_popup" title="users to be added" style="display: none">
 							<li id="error_no_team" style="display: none">Please select a team first!</li>
 							<li id="team_members" ng-show="newSprint.users.length > 0"><b>These People will be added:</b></li>
-							<li ng-repeat = "user in newSprint.users" title="users to be added">
-								{{user.name}}
+							<li  id="adding_user_{{user.id}}" ng-repeat = "user in newSprint.users">
+								<span>{{user.name}}</span> <button title="don't add this user" ng-click="removeUserFromSprint(user)">x</button>
 							</li>
 							<li><button onclick="$('#add_users_popup').hide();">OK</button></li>
 						</ul>

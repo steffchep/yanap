@@ -71,8 +71,11 @@ table {
 	border-spacing: 3px;
 }
 
-th, td {
+tr {
 	background: white;
+}
+
+th, td {
 	text-align: center;
 	padding: 0;
 	width: 100px;
@@ -117,6 +120,7 @@ td a {
 
 tr.new td {
 	padding: 0.5em;
+	background: white;
 }
 
 input, select {
@@ -148,7 +152,7 @@ tr.new input[type=checkbox] {
 
 tr.new li {
 	text-align: left;
-	padding: 0.2em 0.5em;
+	padding: 0.3em 0.5em;
 }
 
 tr.new li:first-child {
@@ -156,13 +160,29 @@ tr.new li:first-child {
 	display: block;
 }
 
+tr:nth-child(even) {
+	background: #f0f0f0
+}
+
+li:nth-child(even) {
+	background: #f0f0f0
+}
+
+li button {
+	float: right;
+}
+
 tr.new li b {
 	display: block;
 }
 
 tr.new li:last-child {
-	text-align: right;
+	height: 1.5em;
 	padding: 0.5em;
+}
+
+tr.new li:last-child button {
+	margin-top: 0.2em;
 }
 
 button {
@@ -186,9 +206,9 @@ td.summary {
 	color: green;
 }
 
-td.spacer {
-	background: transparent;
-	height: 15px;
+.spacer {
+	background: transparent !important;
+	height: 10px;
 	box-shadow: none;
 }
 

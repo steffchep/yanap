@@ -246,6 +246,16 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		}
 	};
 
+	$scope.removeUserFromSprint = function (user) {
+		var deleteIndex = -1;
+		$.each($scope.newSprint.users, function(index, value) {
+			if (user.id === value.id) {
+				deleteIndex = index;
+			}
+		});
+		$scope.newSprint.users.splice(deleteIndex, 1);
+	};
+
 	$scope.usersPopup = function() {
 		if (!$scope.newSprint.team || $scope.newSprint.team === '') {
 			$('#error_no_team').show();
