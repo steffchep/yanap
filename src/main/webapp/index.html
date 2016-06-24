@@ -38,7 +38,7 @@
 					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
-					<td><input type="text" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
+					<td><input type="text" maxlength="50" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
 					<td>
 						<select id="newSprintTeam" ng-model="newSprint.team" ng-change="getUsersByTeam()">
 							<option>Abraxas</option>

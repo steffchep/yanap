@@ -4,6 +4,7 @@ Yet Another Availabilty Planner
 TODOS:
 - Plan board: date in table header
 - Datepicker
+- add end date automatically (always 2 weeks)
 
 Features under consideration:
 - Filter Sprint list by Team (or quick search)

@@ -18,13 +18,21 @@ var checkDateSanity = function(sprint) {
 
 var checkSprintInput = function($scope) {
 	$scope.lastError = "";
-	if (!$scope.newSprint.name || !$scope.newSprint.name === '') {
+	if (!$scope.newSprint.name || $scope.newSprint.name === '') {
 		$scope.lastError = "Sprint name must be set!<br>";
 		$('#newSprintName').addClass("error");
+	} else {
+		if ($scope.newSprint.name.length > 50) {
+			$scope.lastError = "Sprint name cannot be longer than 50 chars!<br>";
+			$('#newSprintName').addClass("error");
+		}
 	}
 	if (!$scope.newSprint.team || !$scope.newSprint.team === '') {
 		$scope.lastError += "Team must be set!<br>";
 		$('#newSprintTeam').addClass("error");
+	}
+	if ($scope.newSprint.users.length == 0) {
+		$scope.lastError += "There must be at least one team member!<br>";
 	}
 
 	var datesValid = true;
