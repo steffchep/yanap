@@ -3,13 +3,14 @@ Yet Another Availabilty Planner
 
 TODOS:
 - show a spinner while saving sprint data
-- delete Sprint and usersBySprint
+- Plan board: date in table header
 - Datepicker
 
 Features under consideration:
 - Filter Sprint list by Team (or quick search)
 - Filter user list by Team (or quick-search)
 - Statistics: Charts for Availability vs Story points
+- delete Sprint and usersBySprint
 - delete user (what about their previous works? either mess up statistics or try to add "empty user" instead
 
 Gold Plating:

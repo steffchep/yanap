@@ -233,7 +233,7 @@ td.clickable {
 }
 
 .clickable:hover {
-	background: #eeeeee;
+	background: #ffeeee;
 	cursor: pointer
 }
 
