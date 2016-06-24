@@ -46,8 +46,8 @@
 							<option>Moby</option>
 						</select>
 					</td>
-					<td><input ui-date type="text" id="newSprintStart" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
-					<td><input ui-date type="text" id="newSprintEnd" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
+					<td><input ui-date type="date" id="newSprintStart" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>
+					<td><input ui-date type="date" id="newSprintEnd" ng-model="newSprint.endDate" onkeydown="$('#newSprintEnd').removeClass('error')"></td>
 					<td>
 						<button ng-click="usersPopup()">Show Members ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->
