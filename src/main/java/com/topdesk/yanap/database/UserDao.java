@@ -11,5 +11,6 @@ public interface UserDao {
 	User getById(long id);
 	List<User> getByTeam(String team);
 	List<User> getByIdList(List<Long> userIds);
+	User update(User updatedUser);
 	User create(User newUser);
 }

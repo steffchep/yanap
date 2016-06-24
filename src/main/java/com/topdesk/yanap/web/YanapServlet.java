@@ -46,6 +46,8 @@ public class YanapServlet extends HttpServlet {
 
 		if (uri.contains(AVAILABILITY_SUB_URL)) {
 			doSaveProperty(req, resp);
+		} else if (uri.startsWith(USER_BY_TEAM_URL)) {
+			doSaveUser(req, resp);
 		} else if (uri.startsWith(ROOT_URL)) {
 			doSaveSprint(req, resp);
 		}
@@ -115,6 +117,21 @@ public class YanapServlet extends HttpServlet {
 		}
 	}
 	
+	private void doSaveUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+
+			String responseBody = getResponseBodyAsString(req);
+
+			Gson gson = new GsonBuilder().create();
+			User sprintAndUsers = new Gson().fromJson(responseBody, User.class);
+			userDao.update(sprintAndUsers);
+
+			writer.write(responseBody);
+		}
+	}
+
 	private void doSaveSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {

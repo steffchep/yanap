@@ -71,6 +71,20 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
+	public User update(User updatedUser) {
+		EntityManager entityManager = factory.createEntityManager();
+		try {
+			entityManager.getTransaction().begin();
+			entityManager.merge(updatedUser);
+			entityManager.getTransaction().commit();
+			return updatedUser;
+		}
+		finally {
+			entityManager.close();
+		}
+	}
+
+	@Override
 	public User create(User newUser) {
 		EntityManager entityManager = factory.createEntityManager();
 		try {

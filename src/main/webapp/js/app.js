@@ -306,6 +306,21 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 		console.log($scope.newUser);
 	};
 
+	$scope.updateUser = function(userObject) {
+		if (checkUser(userObject)) {
+			console.log("update User");
+			$http.post('/boards/users', userObject).success(function(res){
+				console.log("User updated, updating list");
+				$scope.getUsers();
+				$('#newUserName').focus();
+			});
+		}
+	};
+
+	$scope.enableSaveButton = function(id) {
+		$('#' + id).prop('disabled', false);
+	};
+
 	$scope.deleteUser = function(user) {
 		alert("Not yet supported");
 	};
