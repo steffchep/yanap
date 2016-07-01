@@ -196,7 +196,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 		$http.post('/boards', $scope.sprint)
 		.success(function() {
-			updateButton.text("Update")
+			updateButton.text("Save")
 			updateButton.prop("disabled", false);
 		})
 		.error(function(err) {
