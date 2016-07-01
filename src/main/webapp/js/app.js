@@ -188,21 +188,33 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));
 	});
 
+	var updateButtonOriginalText = $('#updateSprintButton').text();
+
+	var disableSaveButton = function(disabledText) {
+		var updateButton = $('#updateSprintButton');
+		if (disabledText) {
+			updateButton.text(disabledText)
+		}
+		updateButton.prop("disabled", true);
+	}
+
+	var enableSaveButton = function() {
+		var updateButton = $('#updateSprintButton');
+		updateButton.text(updateButtonOriginalText);
+		updateButton.prop("disabled", false);
+	}
+
 	var saveSprint = function() {
 		console.log("saving " + id);
-		var updateButton = $('#updateSprintButton');
-		updateButton.text("wait...")
-		updateButton.prop("disabled", true);
+		disableSaveButton("wait...");
 
 		$http.post('/boards', $scope.sprint)
 		.success(function() {
-			updateButton.text("Save")
-			updateButton.prop("disabled", false);
+			enableSaveButton();
 		})
 		.error(function(err) {
 			$('#saveerror').show();
-			updateButton.text("Save")
-			updateButton.prop("disabled", false);
+			enableSaveButton();
 			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
 		});
 	};
