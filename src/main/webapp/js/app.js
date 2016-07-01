@@ -201,7 +201,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		})
 		.error(function(err) {
 			$('#saveerror').show();
-			updateButton.text("Update")
+			updateButton.text("Save")
 			updateButton.prop("disabled", false);
 			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
 		});
