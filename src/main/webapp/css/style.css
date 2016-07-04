@@ -274,6 +274,7 @@ td.clickable {
 }
 
 .errorpopup span {
+	cursor: pointer;
 	float: right;
 	color: red;
 	display: inline-block;
