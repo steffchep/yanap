@@ -13,6 +13,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<h2.version>1.4.190</h2.version>
+		<sqlserver-jdbc.version>4.2.6420.100</sqlserver-jdbc.version>
 	</properties>
 
 	<build>
@@ -20,11 +21,19 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.1</version>
 				<configuration>
 					<path>/</path>
-					<contextFile>src/main/webapp/META-INF/context.xml</contextFile>
 				</configuration>
+				<executions>
+					<execution>
+						<id>tomcat-run</id>
+						<goals>
+							<goal>exec-war-only</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -42,8 +51,8 @@
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -51,13 +60,6 @@
 			<artifactId>gson</artifactId>
 			<version>2.5</version>
 		</dependency>
-
-		<!--<dependency>-->
-			<!--<groupId>org.eclipse.persistence</groupId>-->
-			<!--<artifactId>javax.persistence</artifactId>-->
-			<!--<version>2.1.0</version>-->
-		<!--</dependency>-->
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -84,11 +86,8 @@
 
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>sqljdbc41</artifactId>
-			<version>4.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/sqljdbc4.jar</systemPath>
-		</dependency>
+			<artifactId>jdbc4-driver</artifactId>
+			<version>${sqlserver-jdbc.version}</version> 		</dependency>
 		<dependency>
 			<groupId>com.google.code.guice</groupId>
 			<artifactId>guice</artifactId>
