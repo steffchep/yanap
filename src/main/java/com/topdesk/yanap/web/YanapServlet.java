@@ -30,9 +30,9 @@ public class YanapServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (req.getRequestURI().equals(ROOT_URL)) {
+		if (req.getRequestURI().equals(req.getContextPath() + ROOT_URL)) {
 			doGetAllSprints(req, resp);
-		} else if (req.getRequestURI().startsWith(USER_BY_TEAM_URL)) {
+		} else if (req.getRequestURI().startsWith(req.getContextPath() + USER_BY_TEAM_URL)) {
 			doGetUserList(req, resp);
 		} else {
 			doGetSingleSprint(req, resp);
@@ -46,18 +46,18 @@ public class YanapServlet extends HttpServlet {
 
 		if (uri.contains(AVAILABILITY_SUB_URL)) {
 			doSaveProperty(req, resp);
-		} else if (uri.startsWith(USER_BY_TEAM_URL)) {
+		} else if (uri.startsWith(req.getContextPath() + USER_BY_TEAM_URL)) {
 			doSaveUser(req, resp);
-		} else if (uri.startsWith(ROOT_URL)) {
+		} else if (uri.startsWith(req.getContextPath() + ROOT_URL)) {
 			doSaveSprint(req, resp);
 		}
 	}
 
 	@Override
 	public void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (req.getRequestURI().equals(ROOT_URL)) {
+		if (req.getRequestURI().equals(req.getContextPath() + ROOT_URL)) {
 			doCreateSprint(req, resp);
-		} else if (req.getRequestURI().equals(USER_BY_TEAM_URL)) {
+		} else if (req.getRequestURI().equals(req.getContextPath() + USER_BY_TEAM_URL)) {
 			doCreateUser(req, resp);
 		} else {
 			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
@@ -89,7 +89,7 @@ public class YanapServlet extends HttpServlet {
 	private void doGetUserList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserDao userDao = (UserDao) getServletContext().getAttribute(UserDao.CONTEXT_NAME);
 
-		String team = req.getRequestURI().replace(USER_BY_TEAM_URL + "/", "");
+		String team = req.getRequestURI().replace(req.getContextPath() + USER_BY_TEAM_URL + "/", "");
 		System.err.println("Get user list for: " + team);
 
 		List<User> userList = userDao.getByTeam(team);

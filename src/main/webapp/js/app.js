@@ -181,7 +181,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$scope.sprint = emptySprint;
 	console.log("id = " + id);
 
-	$http.get('/boards/' + id).success(function(res){
+	$http.get('boards/' + id).success(function(res){
 		$scope.sprint = res;
 	}).error(function(err) {
 		$('#loaderror').show();
@@ -208,7 +208,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		console.log("saving " + id);
 		disableSaveButton("wait...");
 
-		$http.post('/boards', $scope.sprint)
+		$http.post('boards', $scope.sprint)
 		.success(function() {
 			enableSaveButton();
 		})
@@ -255,7 +255,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.boards = [];
 
-	$http.get('/boards').success(function(res){
+	$http.get('boards').success(function(res){
 		$scope.boards = res;
 	});
 
@@ -267,7 +267,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$('#add_users_popup').hide();
  		$('#newSprintTeam').removeClass('error');
  		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
-			$http.get('/boards/users/' + $scope.newSprint.team).success(function(res){
+			$http.get('boards/users/' + $scope.newSprint.team).success(function(res){
 				$scope.newSprint.users = res;
 				console.log("Done fetching userlist:");
 				console.log($scope.newSprint.users);
@@ -299,9 +299,9 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.createSprint = function() {
 		if (checkSprintInput($scope)) {
 			console.log("create Sprint");
-			$http.put('/boards', $scope.newSprint).success(function(res){
+			$http.put('boards', $scope.newSprint).success(function(res){
 				console.log("Sprint created, updating list");
-				$http.get('/boards').success(function(res){
+				$http.get('boards').success(function(res){
 					$scope.boards = res;
 					$scope.newSprint = {users: []};
 					$('#newSprintName').focus();
@@ -325,7 +325,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.newUser = { team: "" };
 
 	$scope.getUsers = function(team) {
-		$http.get('/boards/users/' + (team || "all")).success(function(res){
+		$http.get('boards/users/' + (team || "all")).success(function(res){
 			$scope.users = res;
 			console.log("Done fetching userlist:");
 			console.log($scope.users);
@@ -335,7 +335,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.createUser = function() {
 		if (checkUser($scope.newUser)) {
 			console.log("create User");
-			$http.put('/boards/users', $scope.newUser).success(function(res){
+			$http.put('boards/users', $scope.newUser).success(function(res){
 				console.log("User created, updating list");
 				$scope.newUser = { team: "" };
 				$scope.getUsers();
@@ -348,7 +348,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.updateUser = function(userObject) {
 		if (checkUser(userObject)) {
 			console.log("update User");
-			$http.post('/boards/users', userObject).success(function(res){
+			$http.post('boards/users', userObject).success(function(res){
 				console.log("User updated, updating list");
 				$scope.getUsers();
 				$('#newUserName').focus();
