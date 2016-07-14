@@ -85,6 +85,10 @@ th, td {
 	box-shadow: 1px 1px 0px #B2AD9F;
 }
 
+td.actions {
+	width: 20%;
+}
+
 ul {
 	position: absolute;
 	margin: -5px;

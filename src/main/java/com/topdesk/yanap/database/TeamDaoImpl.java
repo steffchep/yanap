@@ -28,11 +28,11 @@ public class TeamDaoImpl implements TeamDao {
 	}
 	
 	@Override
-	public Team delete(Team team) {
+	public Team delete(long id) {
 		
 		EntityManager entityManager = factory.createEntityManager();
 		try {
-			Team toRemove = entityManager.find(Team.class, team.getId());
+			Team toRemove = entityManager.find(Team.class, id);
 			
 			entityManager.getTransaction().begin();
 			entityManager.remove(toRemove);

@@ -20,17 +20,17 @@
 					<th>Team</th>
 					<th></th>
 				</tr>
-				<tr ng-repeat="team in teams">
+				<tr ng-repeat="team in teamlist">
 					<td class="name">{{team.name}}</td>
 					<td class="actions">
-						<button id="delete_{{team.id}}" disabled class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
+						<button id="delete_{{team.id}}" class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
 					</td>
 				</tr>
 				<tr class="spacer">
 					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
-					<td><input type="text" required id="newTeamName" value="" placeholder="Team Name" ng-model="newTeam.name" onkeydown="$('#newTeamName').removeClass('error')"></td>
+					<td><input type="text" id="newTeamName" value="" placeholder="Team Name" ng-model="newTeam.name" onkeydown="$('#newTeamName').removeClass('error')"></td>
 					<td><input type="submit" value="Add Team" ng-click="createTeam()"></td>
 				</tr>
 			</table>

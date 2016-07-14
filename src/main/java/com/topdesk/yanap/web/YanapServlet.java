@@ -77,7 +77,7 @@ public class YanapServlet extends HttpServlet {
 	
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (req.getRequestURI().equals(req.getContextPath() + TEAM_URL)) {
+		if (req.getRequestURI().startsWith(req.getContextPath() + TEAM_URL)) {
 			doDeleteTeam(req, resp);
 		} else {
 			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
@@ -233,12 +233,43 @@ public class YanapServlet extends HttpServlet {
 		}
 	}
 	
-	private void doCreateTeam(HttpServletRequest req, HttpServletResponse resp) {
+	private void doCreateTeam(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		TeamDao teamDao = (TeamDao) getServletContext().getAttribute(TeamDao.CONTEXT_NAME);
 		
+		System.err.println("Create Team");
+		
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+			
+			String responseBody = getResponseBodyAsString(req);
+			
+			Gson gson = new GsonBuilder().create();
+			System.err.println(responseBody);
+			Team newTeam = new Gson().fromJson(responseBody, Team.class);
+			teamDao.create(newTeam);
+			
+			new Gson().toJson(newTeam, writer);
+		}
 	}
 	
-	private void doDeleteTeam(HttpServletRequest req, HttpServletResponse resp) {
+	private void doDeleteTeam(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		TeamDao teamDao = (TeamDao) getServletContext().getAttribute(TeamDao.CONTEXT_NAME);
 		
+		String id = getNumberFromString(req.getRequestURI());
+		System.err.println("Delete Team with id" + id);
+		
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+			
+			String responseBody = getResponseBodyAsString(req);
+			
+			Gson gson = new GsonBuilder().create();
+			System.err.println(responseBody);
+			Team deleteme = new Gson().fromJson(responseBody, Team.class);
+			teamDao.delete(Long.parseLong(id));
+			
+			new Gson().toJson(deleteme, writer);
+		}
 	}
 	
 	private String getNumberFromString(String string) {

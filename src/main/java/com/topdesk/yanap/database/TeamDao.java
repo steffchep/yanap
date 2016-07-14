@@ -9,6 +9,6 @@ public interface TeamDao {
 	public static final String CONTEXT_NAME = "TeamDao";
 	
 	List<Team> getAll();
-	Team delete(Team sprint);
+	Team delete(long id);
 	Team create(Team newTeam);
 }

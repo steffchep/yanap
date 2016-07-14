@@ -377,3 +377,37 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.getUsers();
 
 });
+
+availabilityBoard.controller('teamListController', function($scope, $http) {
+	getTeamList($scope, $http);
+	
+	$scope.newTeam = { name: "" };
+
+	$scope.createTeam = function() {
+		if ($scope.newTeam.name.trim() !== "") {
+			console.log("create team");
+			$http.put('boards/teams', $scope.newTeam).success(function(res){
+				console.log("Team created, updating list");
+				$scope.newTeam = { name: "" };
+				getTeamList($scope, $http);
+				$('#newTeamName').focus();
+			});
+		} else {
+			$('#newTeamName').addClass("error");
+			$scope.lastError = "Team name must be set."
+      		$('#saveerror').show();
+      	}
+	};
+
+	$scope.deleteTeam = function(teamObject) {
+		if (checkUser(teamObject)) {
+			console.log("delete Team");
+			$http.delete('boards/teams/' + teamObject.id).success(function(res){
+				console.log("Team deleted, updating list");
+				getTeamList($scope, $http);
+				$('#newTeamName').focus();
+			});
+		}
+	};
+
+});
