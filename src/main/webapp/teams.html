@@ -14,13 +14,14 @@
 <body>
 	<div class="content">
 		<h1>Team List</h1>
+		<label>Filter: <input class="searchbox" ng-model="filterText"></label>
 		<form action="" method="POST">
 			<table>
 				<tr>
 					<th>Team</th>
 					<th></th>
 				</tr>
-				<tr ng-repeat="team in teamlist">
+				<tr ng-repeat="team in teamlist | filter:filterText">
 					<td class="name">{{team.name}}</td>
 					<td class="actions">
 						<button id="delete_{{team.id}}" class="clickable" href="" ng-click="deleteTeam(team)">delete</button>

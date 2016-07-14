@@ -55,6 +55,17 @@ h2 input {
 	text-align: right;
 }
 
+label {
+	color: white;
+	font-weight: bold;
+	text-shadow: 1px 1px 3px #000000;
+	text-align: center;
+}
+
+.searchbox {
+	width: 20em;
+}
+
 h1 .clickable:hover {
 	color: white;
 	background: transparent;
