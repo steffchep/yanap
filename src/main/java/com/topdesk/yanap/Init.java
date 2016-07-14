@@ -7,6 +7,8 @@ import javax.servlet.ServletContextListener;
 
 import com.topdesk.yanap.database.SprintDao;
 import com.topdesk.yanap.database.SprintDaoImpl;
+import com.topdesk.yanap.database.TeamDao;
+import com.topdesk.yanap.database.TeamDaoImpl;
 import com.topdesk.yanap.database.UserBySprintDao;
 import com.topdesk.yanap.database.UserBySprintDaoImpl;
 import com.topdesk.yanap.database.UserDao;
@@ -22,6 +24,7 @@ public class Init implements ServletContextListener {
 
 		event.getServletContext().setAttribute(SprintDao.CONTEXT_NAME, new SprintDaoImpl(emf));
 		event.getServletContext().setAttribute(UserDao.CONTEXT_NAME, new UserDaoImpl(emf));
+		event.getServletContext().setAttribute(TeamDao.CONTEXT_NAME, new TeamDaoImpl(emf));
 		event.getServletContext().setAttribute(UserBySprintDao.CONTEXT_NAME, new UserBySprintDaoImpl(emf));
 	}
 

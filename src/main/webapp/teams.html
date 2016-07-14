@@ -1,0 +1,49 @@
+<!doctype html>
+<!--suppress ALL -->
+<html ng-app="availabilityBoard" ng-controller="teamListController">
+<head>
+	<title>YANAP Availability Board</title>
+	<script src="js/lib/jquery-2.1.4.min.js"></script>
+	<script src="js/lib/angular.min.js"></script>
+	<script src="js/lib/angular-sanitize.js"></script>
+	<script src="js/lib/moment-with-locales-2.11.2.js"></script>
+	<script src="js/app.js"></script>
+	<link rel="stylesheet" href="css/style.css"/>
+</head>
+
+<body>
+	<div class="content">
+		<h1>Team List</h1>
+		<form action="" method="POST">
+			<table>
+				<tr>
+					<th>Team</th>
+					<th></th>
+				</tr>
+				<tr ng-repeat="team in teams">
+					<td class="name">{{team.name}}</td>
+					<td class="actions">
+						<button id="delete_{{team.id}}" disabled class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
+					</td>
+				</tr>
+				<tr class="spacer">
+					<td class="spacer" colspan="12"></td>
+				</tr>
+				<tr class="new">
+					<td><input type="text" required id="newTeamName" value="" placeholder="Team Name" ng-model="newTeam.name" onkeydown="$('#newTeamName').removeClass('error')"></td>
+					<td><input type="submit" value="Add Team" ng-click="createTeam()"></td>
+				</tr>
+			</table>
+		</form>
+		<div><a class="clickable" href="index.html">&raquo; Back to Sprint List</a></div>
+	</div>
+	<div class="errorpopup" style="display:none" id="saveerror" onclick="$('#saveerror').hide();">
+		<div>
+			<span>x</span>
+			Could not create the Team: <br><br>
+			<div ng-bind-html="lastError"></div>
+		</div>
+	</div>
+
+</body>
+</html>

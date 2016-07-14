@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.SprintDao;
+import com.topdesk.yanap.database.Team;
+import com.topdesk.yanap.database.TeamDao;
 import com.topdesk.yanap.database.User;
 import com.topdesk.yanap.database.UserBySprint;
 import com.topdesk.yanap.database.UserBySprintDao;
@@ -25,6 +27,7 @@ public class YanapServlet extends HttpServlet {
 
 	private static final String ROOT_URL = "/boards";
 	private static final String USER_BY_TEAM_URL = ROOT_URL + "/users";
+	private static final String TEAM_URL = ROOT_URL + "/teams";
 	private static final String AVAILABILITY_SUB_URL = "/availability";
 	private static final String JSON_TYPE = "application/json; charset=utf8";
 
@@ -34,11 +37,13 @@ public class YanapServlet extends HttpServlet {
 			doGetAllSprints(req, resp);
 		} else if (req.getRequestURI().startsWith(req.getContextPath() + USER_BY_TEAM_URL)) {
 			doGetUserList(req, resp);
+		} else if (req.getRequestURI().startsWith(req.getContextPath() + TEAM_URL)) {
+			doGetTeamList(req, resp);
 		} else {
 			doGetSingleSprint(req, resp);
 		}
 	}
-
+	
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String uri = req.getRequestURI();
@@ -59,6 +64,8 @@ public class YanapServlet extends HttpServlet {
 			doCreateSprint(req, resp);
 		} else if (req.getRequestURI().equals(req.getContextPath() + USER_BY_TEAM_URL)) {
 			doCreateUser(req, resp);
+		} else if (req.getRequestURI().equals(req.getContextPath() + TEAM_URL)) {
+			doCreateTeam(req, resp);
 		} else {
 			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
 				resp.setContentType(JSON_TYPE);
@@ -70,9 +77,14 @@ public class YanapServlet extends HttpServlet {
 	
 	@Override
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
-			resp.setContentType(JSON_TYPE);
-			writer.write("DELETE work in progress");
+		if (req.getRequestURI().equals(req.getContextPath() + TEAM_URL)) {
+			doDeleteTeam(req, resp);
+		} else {
+			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+				resp.setContentType(JSON_TYPE);
+				resp.setStatus(400);
+				writer.write("not recognized");
+			}
 		}
 	}
 
@@ -99,7 +111,20 @@ public class YanapServlet extends HttpServlet {
 			new Gson().toJson(userList, writer);
 		}
 	}
-
+	
+	private void doGetTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		TeamDao teamDao = (TeamDao) getServletContext().getAttribute(TeamDao.CONTEXT_NAME);
+		
+		System.err.println("Get team list");
+		
+		List<Team> userList = teamDao.getAll();
+		
+		try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
+			resp.setContentType(JSON_TYPE);
+			new Gson().toJson(userList, writer);
+		}
+	}
+	
 	private void doGetSingleSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
 		UserBySprintDao userBySprintDao = (UserBySprintDao) getServletContext().getAttribute(UserBySprintDao.CONTEXT_NAME);
@@ -206,6 +231,14 @@ public class YanapServlet extends HttpServlet {
 
 			new Gson().toJson(newUser, writer);
 		}
+	}
+	
+	private void doCreateTeam(HttpServletRequest req, HttpServletResponse resp) {
+		
+	}
+	
+	private void doDeleteTeam(HttpServletRequest req, HttpServletResponse resp) {
+		
 	}
 	
 	private String getNumberFromString(String string) {
