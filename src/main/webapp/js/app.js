@@ -11,9 +11,10 @@ var formatTime = function(timestamp) {
 };
 
 var checkDateSanity = function(sprint) {
+	var now = moment(new Date()).startOf('day');
 	var start = moment(new Date(sprint.startDate));
 	var end = moment(new Date(sprint.endDate));
-	return start.isBefore(end);
+	return start.isBefore(end) && start.isAfter(now);
 };
 
 var checkSprintInput = function($scope) {
@@ -47,7 +48,8 @@ var checkSprintInput = function($scope) {
 		datesValid = false;
 	}
 	if (datesValid && !checkDateSanity($scope.newSprint) ) {
-		$scope.lastError += "EndDate must be after StartDate!<br>";
+		$scope.lastError += "StartDate must be in the future, EndDate must be after StartDate!<br>";
+		$('#newSprintStart').addClass("error");
 		$('#newSprintEnd').addClass("error");
 	}
 
