@@ -41,17 +41,7 @@
 					<td><input type="text" maxlength="50" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
 					<td>
 						<select id="newSprintTeam" ng-model="newSprint.team" ng-change="getUsersByTeam()">
-							<option>Abraxas</option>
-							<option>Alfonzo</option>
-							<option>Cappucino</option>
-							<option>Elwetritsch</option>
-							<option>Izidor</option>
-							<option>Merlin</option>
-							<option>Moby</option>
-							<option>Octarine</option>
-							<option>Phoenix</option>
-							<option>Rodolfo</option>
-							<option>Zythos</option>
+							<option ng-repeat="team in teamlist">{{team.name}}</option>
 						</select>
 					</td>
 					<td><input ui-date type="date" id="newSprintStart" placeholder="JJJJ-MM-TT" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart').removeClass('error')"></td>

@@ -24,7 +24,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "teams")
 @NamedQueries({
-	@NamedQuery(name = "Team.getAll", query = "SELECT t FROM Team t"),
+	@NamedQuery(name = "Team.getAll", query = "SELECT t FROM Team t ORDER BY name"),
 })
 public class Team {
 	@Id

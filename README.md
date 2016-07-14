@@ -5,7 +5,7 @@ run "mvn package" to create an executable jar (tomcat embedded, user -httpPort o
 
 TODOS:
 - variable sprint lengths!
-- get teams from DB list (still enter tham as text to not lose old ones)
+- get teams from DB list (still enter them as text to not lose old ones)
 - Plan board: date in table header
 - Filter Sprint list by Team (or quick search)
 - Filter user list by Team (or quick-search)

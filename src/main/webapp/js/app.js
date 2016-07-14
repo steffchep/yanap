@@ -176,6 +176,12 @@ var getClassForStatus = function(status) {
 	return getStatusText(status).replace(/\s/g, "_");
 };
 
+var getTeamList = function($scope, $http) {
+	$http.get('boards/teams').success(function(res){
+		$scope.teamlist = res;
+	});
+}
+
 availabilityBoard.controller('availabilityController', function($scope, $http) {
 	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
@@ -255,6 +261,8 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.boards = [];
 
+	getTeamList($scope, $http);
+
 	$http.get('boards').success(function(res){
 		$scope.boards = res;
 	});
@@ -323,6 +331,8 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.users = [];
 	$scope.newUser = { team: "" };
+
+	getTeamList($scope, $http);
 
 	$scope.getUsers = function(team) {
 		$http.get('boards/users/' + (team || "all")).success(function(res){
