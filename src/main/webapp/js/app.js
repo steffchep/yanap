@@ -31,8 +31,6 @@ var adjustSprintDaysForPersons = function(person, length) {
 };
 
 var	adjustSprintDays = function (sprint, length) {
-	console.log(length);
-	console.log(sprint.developers[0].days.length);
 	if (sprint.developers && sprint.developers.length > 0 && sprint.developers[0].days.length > length) {
 		$.each(sprint.developers, function(index, value) {
 			adjustSprintDaysForPersons(value, length);

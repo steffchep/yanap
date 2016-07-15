@@ -38,25 +38,25 @@ public class UserBySprint {
 	
 	// ugh, I know this is ugly. This is what I get for being lazy on initial design...
 	@Column(name="day01")
-	private Float day01;
+	private Float day01 = 0.0F;
 	@Column(name="day02")
-	private Float day02;
+	private Float day02 = 0.0F;
 	@Column(name="day03")
-	private Float day03;
+	private Float day03 = 0.0F;
 	@Column(name="day04")
-	private Float day04;
+	private Float day04 = 0.0F;
 	@Column(name="day05")
-	private Float day05;
+	private Float day05 = 0.0F;
 	@Column(name="day06")
-	private Float day06;
+	private Float day06 = 0.0F;
 	@Column(name="day07")
-	private Float day07;
+	private Float day07 = 0.0F;
 	@Column(name="day08")
-	private Float day08;
+	private Float day08 = 0.0F;
 	@Column(name="day09")
-	private Float day09;
+	private Float day09 = 0.0F;
 	@Column(name="day10")
-	private Float day10;
+	private Float day10 = 0.0F;
 	@Column(name="day11")
 	private Float day11;
 	@Column(name="day12")
