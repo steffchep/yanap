@@ -25,6 +25,27 @@ var createTableHeaders = function(sprint) {
 	return headers;
 };
 
+var adjustSprintDaysForPersons = function(person, length) {
+	var rest = person.days.length - length;
+	person.days.splice(length, rest);
+};
+
+var	adjustSprintDays = function (sprint, length) {
+	console.log(length);
+	console.log(sprint.developers[0].days.length);
+	if (sprint.developers && sprint.developers.length > 0 && sprint.developers[0].days.length > length) {
+		$.each(sprint.developers, function(index, value) {
+			adjustSprintDaysForPersons(value, length);
+		});
+	}
+	if (sprint.nondevelopers && sprint.nondevelopers.length > 0 && sprint.nondevelopers[0].days.length > length) {
+		$.each(sprint.nondevelopers, function(index, value) {
+			adjustSprintDaysForPersons(value, length);
+		});
+	}
+};
+
+
 var formatTime = function(timestamp) {
 	var formatMe = new Date(timestamp); // work around deprecation warning
 	return moment(formatMe).format('ll');
@@ -213,6 +234,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$http.get('boards/' + id).success(function(res){
 		$scope.sprint = res;
 		$scope.tableHeaders = createTableHeaders($scope.sprint);
+		adjustSprintDays($scope.sprint, $scope.tableHeaders.length);
 		$('.summary').attr("colspan", $scope.tableHeaders.length + 1);
 	}).error(function(err) {
 		$('#loaderror').show();
