@@ -1,8 +1,28 @@
-var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
-
 var emptySprint = {
 	"developers": [],
 	"nondevelopers": []
+};
+
+var weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "", ""];
+var daysInWeek = 7;
+
+var createTableHeaders = function(sprint) {
+	var start = moment(new Date(sprint.startDate)),
+		end = moment(new Date(sprint.endDate)),
+		days = end.diff(start, "days"),
+		headers = [], daysPos = start.day() - 1, headersPos = 0;
+
+	for (var i = 0; i < days; i++) {
+		if (daysPos === weekDays.length) {
+			daysPos = 0;
+		}
+		if (weekDays[daysPos] !== "") {
+			headers[headersPos] = weekDays[daysPos];
+			headersPos = headersPos + 1;
+		}
+		daysPos = daysPos + 1;
+	}
+	return headers;
 };
 
 var formatTime = function(timestamp) {
@@ -184,13 +204,15 @@ var getTeamList = function($scope, $http) {
 	});
 }
 
+var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
+
 availabilityBoard.controller('availabilityController', function($scope, $http) {
 	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
-	console.log("id = " + id);
 
 	$http.get('boards/' + id).success(function(res){
 		$scope.sprint = res;
+		$scope.tableHeaders = createTableHeaders($scope.sprint);
 	}).error(function(err) {
 		$('#loaderror').show();
 		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));

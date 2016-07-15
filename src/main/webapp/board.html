@@ -33,16 +33,7 @@
 		<table>
 			<tr>
 				<th>Name</th>
-				<th>Tue</th>
-				<th>Wed</th>
-				<th>Thu</th>
-				<th>Fri</th>
-				<th>Mon</th>
-				<th>Tue</th>
-				<th>Wed</th>
-				<th>Thu</th>
-				<th>Fri</th>
-				<th>Mon</th>
+				<th ng-repeat="day in tableHeaders">{{day}}</th>
 			</tr>
 			<tr ng-repeat="person in sprint.developers">
 				<td class="name">{{person.name}}</td>
