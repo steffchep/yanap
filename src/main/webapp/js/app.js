@@ -213,6 +213,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	$http.get('boards/' + id).success(function(res){
 		$scope.sprint = res;
 		$scope.tableHeaders = createTableHeaders($scope.sprint);
+		$('.summary').attr("colspan", $scope.tableHeaders.length + 1);
 	}).error(function(err) {
 		$('#loaderror').show();
 		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));

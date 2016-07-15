@@ -49,7 +49,7 @@
 				</td>
 			</tr>
 			<tr class="spacer">
-				<td class="spacer" colspan="11"></td>
+				<td class="spacer"></td>
 			</tr>
 			<tr ng-repeat="person in sprint.nondevelopers">
 				<td class="name">{{person.name}}</td>
@@ -65,7 +65,7 @@
 				</td>
 			</tr>
 			<tr class="spacer">
-				<td class="spacer" colspan="11"></td>
+				<td class="spacer"></td>
 			</tr>
 			<tr>
 				<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of {{totalDays(sprint.developers)}} days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>

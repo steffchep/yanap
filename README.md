@@ -4,7 +4,6 @@ Yet Another Availabilty Planner
 run "mvn package" to create an executable jar (tomcat embedded, user -httpPort option to change port on startup)
 
 TODOS:
-- variable sprint lengths!
 - Plan board: date in table header
 - properties file for db connection
 - Datepicker

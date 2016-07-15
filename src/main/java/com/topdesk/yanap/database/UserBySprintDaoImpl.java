@@ -60,9 +60,7 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 
 		try {
 			for (User user : users) {
-				UserBySprint userBySprint = new UserBySprint();
-				userBySprint.setSprint(sprint);
-				userBySprint.setUser(user);
+				UserBySprint userBySprint = new UserBySprint(sprint, user);
 				entityManager.getTransaction().begin();
 				entityManager.persist(userBySprint);
 				entityManager.getTransaction().commit();
