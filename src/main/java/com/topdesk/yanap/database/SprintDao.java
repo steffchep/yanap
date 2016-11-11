@@ -12,6 +12,6 @@ public interface SprintDao {
 	Sprint getById(long id);
 	List<Sprint> getByTeam(String team);
 	Sprint update(Sprint sprint);
-	Sprint delete(Sprint sprint);
+	void delete(long id);
 	Sprint create(Sprint newSprint);
 }

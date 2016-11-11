@@ -365,7 +365,16 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	};
 
 	$scope.deleteSprint = function(sprint) {
-		alert("Not yet supported");
+		if (confirm("Are you sure you want to delete this sprint?")) {
+			$http.delete('boards/' + sprint.id).success(function(res){
+				console.log("Sprint deleted, updating list");
+				$http.get('boards').success(function(res){
+					$scope.boards = res;
+					$scope.newSprint = {users: []};
+					$('#newSprintName').focus();
+				});
+			});
+		}
 	};
 
 	$scope.formatTime = formatTime;

@@ -79,6 +79,8 @@ public class YanapServlet extends HttpServlet {
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if (req.getRequestURI().startsWith(req.getContextPath() + TEAM_URL)) {
 			doDeleteTeam(req, resp);
+		} else if (req.getRequestURI().startsWith(req.getContextPath() + ROOT_URL)) {
+			doDeleteSprint(req, resp);
 		} else {
 			try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream(), Charset.forName("UTF-8"))) {
 				resp.setContentType(JSON_TYPE);
@@ -270,6 +272,18 @@ public class YanapServlet extends HttpServlet {
 			
 			new Gson().toJson(deleteme, writer);
 		}
+	}
+	private void doDeleteSprint(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UserBySprintDao userBySprintDao = (UserBySprintDao) getServletContext().getAttribute(UserBySprintDao.CONTEXT_NAME);
+		SprintDao sprintDao = (SprintDao) getServletContext().getAttribute(SprintDao.CONTEXT_NAME);
+		
+		long id = Long.parseLong(getNumberFromString(req.getRequestURI()));
+		System.err.println("Delete Sprint with id" + id);
+		
+		userBySprintDao.deleteBySprint(id);
+		sprintDao.delete(id);
+		
+		resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
 	}
 	
 	private String getNumberFromString(String string) {

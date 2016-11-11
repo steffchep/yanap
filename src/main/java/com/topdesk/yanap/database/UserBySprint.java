@@ -3,7 +3,16 @@ package com.topdesk.yanap.database;
 import java.util.Calendar;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +30,7 @@ import lombok.ToString;
 @Table(name = "usersbysprint")
 @NamedQueries({
 	@NamedQuery(name = "UserBySprint.getBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint = :sprint ORDER BY user.name"),
+	@NamedQuery(name = "UserBySprint.deleteBySprint", query = "DELETE FROM UserBySprint s WHERE s.sprint.id = :sprint"),
 	@NamedQuery(name = "UserBySprint.getSingleBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint.id = :sprintId AND s.user.id = :userId")
 })
 public class UserBySprint {
