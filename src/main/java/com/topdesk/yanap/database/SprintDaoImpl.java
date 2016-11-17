@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
@@ -70,8 +72,27 @@ public class SprintDaoImpl implements SprintDao {
 	}
 
 	@Override
-	public Sprint delete(Sprint sprint) {
-		return null;
+	public void delete(long id) {
+		EntityManager em = null;
+		EntityTransaction tr = null;
+		try {
+			em = factory.createEntityManager();
+			tr = em.getTransaction();
+			tr.begin();
+			Query query = em.createNamedQuery("Sprint.delete");
+			query.setParameter("id", id);
+			query.executeUpdate();
+			tr.commit();
+		} catch (RuntimeException e) {
+			if (tr != null) {
+				tr.rollback();
+			}
+			throw e;
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	@Override

@@ -10,6 +10,6 @@ public interface UserBySprintDao {
 
 	List<UserBySprint> getAllForSprint(Sprint sprint);
 	UserBySprint saveAvailability(long sprintId, long userId, int index, float value);
-	void deleteBySprint(Sprint sprint);
+	void deleteBySprint(long sprint);
 	List<UserBySprint> createForSprint(Sprint sprint, List<User> users);
 }

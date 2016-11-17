@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,27 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 	}
 
 	@Override
-	public void deleteBySprint(Sprint sprint) {
+	public void deleteBySprint(long sprint) {
+		EntityManager em = null;
+		EntityTransaction tr = null;
+		try {
+			em = factory.createEntityManager();
+			tr = em.getTransaction();
+			tr.begin();
+			Query query = em.createNamedQuery("UserBySprint.deleteBySprint");
+			query.setParameter("sprint", sprint);
+			query.executeUpdate();
+			tr.commit();
+		} catch (RuntimeException e) {
+			if (tr != null) {
+				tr.rollback();
+			}
+			throw e;
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 
 	}
 
