@@ -32,7 +32,7 @@
 						</select>
 					</td>
 					<td class="status">
-						<input type="checkbox" id="isDeveloper" value="1" ng-model="user.isDeveloper" ng-change = "enableSaveButton('save_' + {{user.id}})">
+						<input type="checkbox" value="1" ng-model="user.developer" ng-change = "enableSaveButton('save_' + {{user.id}})">
 					</td>
 					<td class="actions">
 						<button id="save_{{user.id}}" disabled class="clickable" href="" ng-click="updateUser(user)">save</button>
@@ -51,7 +51,7 @@
 						</select>
 					</td>
 					<td>
-						<input type="checkbox" id="isDeveloper" value="1" ng-model="newUser.isDeveloper">
+						<input type="checkbox" value="1" ng-model="newUser.developer">
 					</td>
 					<td><input type="submit" value="Add User" ng-click="createUser()" ng-disabled="!(newUser.name > '')"></td>
 				</tr>

@@ -37,7 +37,7 @@ public class User {
 	private String name;
 	
 	@Column(name = "isDeveloper", nullable = false)
-	private boolean isDeveloper;
+	private boolean developer;
 
 	@Column(name = "team")
 	private String team;
