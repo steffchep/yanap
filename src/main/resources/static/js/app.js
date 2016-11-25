@@ -309,22 +309,28 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	};
 });
 
+var pageSize = 20;
 availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.boards = [];
 	
 	getTeamList($scope, $http);
 	
 	function reload() {
-		$http.get('sprints').success(function(res){
+		$http.get('sprints?sort=startDate,desc&size=' + pageSize).success(function(res){
 			$scope.sprints = (res._embedded || {}).sprints || [];
+			$scope.hasMore = (res.page || {}).totalPages > 1;
 		});
 		$scope.newSprint = { users: [] };
 	}
 	reload();
+	$scope.loadMoreSprints = function() {
+		pageSize *= 2;
+		reload();
+	};
 	
-	//TODO: remove once board.html accepts complete self-link
-	$scope.getId = function(sprint) {
-		return sprint._links.self.href.replace(/^.*\/(\d+)$/, '$1');
+	//TODO: remove need for this
+	$scope.getId = function(entity) {
+		return entity._links.self.href.replace(/^.*\/(\d+)$/, '$1');
 	};
 	
 	$scope.usersByTeam = [];
