@@ -10,10 +10,14 @@ import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 /**
  * Created by stephaniep on 17.05.2016.
  */
-@RequiredArgsConstructor
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SprintDaoImpl implements SprintDao {
 	private final EntityManagerFactory factory;
 

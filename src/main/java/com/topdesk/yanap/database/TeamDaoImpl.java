@@ -8,10 +8,14 @@ import javax.persistence.TypedQuery;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 /**
  * Created by stephaniep on 14.07.2016.
  */
-@RequiredArgsConstructor
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TeamDaoImpl implements TeamDao {
 	private final EntityManagerFactory factory;
 

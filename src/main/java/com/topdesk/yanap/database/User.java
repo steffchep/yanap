@@ -33,10 +33,10 @@ public class User {
 	@GeneratedValue(strategy= GenerationType.AUTO)
 	private long id;
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
-
-	@Column(name = "isDeveloper")
+	
+	@Column(name = "isDeveloper", nullable = false)
 	private boolean isDeveloper;
 
 	@Column(name = "team")
