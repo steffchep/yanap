@@ -1,5 +1,6 @@
 package com.topdesk.yanap.database;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,8 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -25,11 +25,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "sprints")
-@NamedQueries({
-	@NamedQuery(name = "Sprint.getAll", query = "SELECT s FROM Sprint s ORDER BY startDate DESC"),
-	@NamedQuery(name = "Sprint.getByTeam", query = "SELECT s FROM Sprint s WHERE s.team = :team ORDER BY startDate DESC" ),
-	@NamedQuery(name = "Sprint.delete", query = "DELETE FROM Sprint s WHERE s.id = :id" )
-})
 public class Sprint {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)
@@ -55,5 +50,8 @@ public class Sprint {
 
 	@Column(name = "pointscompleted")
 	private int pointsCompleted;
-
+	
+	
+	@OneToMany(mappedBy = "sprint", orphanRemoval = true)
+	private Collection<UserBySprint> userBySprints;
 }

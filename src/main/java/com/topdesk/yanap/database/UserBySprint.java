@@ -29,8 +29,8 @@ import lombok.ToString;
 @Entity
 @Table(name = "usersbysprint")
 @NamedQueries({
-	@NamedQuery(name = "UserBySprint.getBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint = :sprint ORDER BY user.name"),
-	@NamedQuery(name = "UserBySprint.deleteBySprint", query = "DELETE FROM UserBySprint s WHERE s.sprint.id = :sprint"),
+	@NamedQuery(name = "UserBySprint.getBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint.id = :sprintId ORDER BY user.name"),
+	@NamedQuery(name = "UserBySprint.deleteBySprint", query = "DELETE FROM UserBySprint s WHERE s.sprint.id = :sprintId"),
 	@NamedQuery(name = "UserBySprint.getSingleBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint.id = :sprintId AND s.user.id = :userId")
 })
 public class UserBySprint {

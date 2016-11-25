@@ -11,7 +11,7 @@ var createTableHeaders = function(sprint) {
 		end = moment(new Date(sprint.endDate)),
 		days = end.diff(start, "days"),
 		headers = [], daysPos = start.day() - 1, headersPos = 0;
-
+	
 	for (var i = 0; i < days; i++) {
 		if (daysPos === weekDays.length) {
 			daysPos = 0;
@@ -74,7 +74,7 @@ var checkSprintInput = function($scope) {
 	if ($scope.newSprint.users.length == 0) {
 		$scope.lastError += "There must be at least one team member!<br>";
 	}
-
+	
 	var datesValid = true;
 	if (!moment($scope.newSprint.startDate, 'YYYY-MM-DD', true).isValid() ) {
 		$scope.lastError += "StartDate must be valid!<br>";
@@ -91,7 +91,7 @@ var checkSprintInput = function($scope) {
 		$('#newSprintStart').addClass("error");
 		$('#newSprintEnd').addClass("error");
 	}
-
+	
 	if ($scope.lastError !== '') {
 		$('#saveerror').show();
 		return false;
@@ -228,7 +228,7 @@ var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
 availabilityBoard.controller('availabilityController', function($scope, $http) {
 	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
-
+	
 	$http.get('boards/' + id).success(function(res){
 		$scope.sprint = res;
 		$scope.tableHeaders = createTableHeaders($scope.sprint);
@@ -238,9 +238,9 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		$('#loaderror').show();
 		console.log("Error fetching the Sprint: " + JSON.stringify(err, null, " "));
 	});
-
+	
 	var updateButtonOriginalText = $('#updateSprintButton').text();
-
+	
 	var disableSaveButton = function(disabledText) {
 		var updateButton = $('#updateSprintButton');
 		if (disabledText) {
@@ -248,29 +248,35 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		}
 		updateButton.prop("disabled", true);
 	}
-
+	
 	var enableSaveButton = function() {
 		var updateButton = $('#updateSprintButton');
 		updateButton.text(updateButtonOriginalText);
 		updateButton.prop("disabled", false);
 	}
-
-	var saveSprint = function() {
+	
+	$scope.saveSprint = function() {
 		console.log("saving " + id);
 		disableSaveButton("wait...");
-
-		$http.post('boards', $scope.sprint)
-		.success(function() {
-			enableSaveButton();
+		
+		$http.put('sprints/' + $scope.sprint.id, {
+			name: $scope.sprint.name,
+			endDate: $scope.sprint.endDate,
+			startDate: $scope.sprint.startDate,
+			status: $scope.sprint.status,
+			pointsPlanned: $scope.sprint.pointsPlanned,
+			pointsCompleted: $scope.sprint.pointsCompleted,
+			team: $scope.sprint.team
 		})
-		.error(function(err) {
-			$('#saveerror').show();
-			enableSaveButton();
-			console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
-		});
+			.success(function() {
+				enableSaveButton();
+			})
+			.error(function(err) {
+				$('#saveerror').show();
+				enableSaveButton();
+				console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
+			});
 	};
-
-	$scope.saveSprint = saveSprint;
 	$scope.calculateDevDays = calculateDevDays;
 	$scope.percentTotal = percentTotal;
 	$scope.totalDays = totalDays;
@@ -305,28 +311,28 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.boards = [];
-
+	
 	getTeamList($scope, $http);
-
+	
 	function reload() {
 		$http.get('sprints').success(function(res){
-			$scope.sprints = res._embedded.sprints;
+			$scope.sprints = (res._embedded || {}).sprints || [];
 		});
 		$scope.newSprint = { users: [] };
 	}
 	reload();
-
+	
 	//TODO: remove once board.html accepts complete self-link
 	$scope.getId = function(sprint) {
 		return sprint._links.self.href.replace(/^.*\/(\d+)$/, '$1');
 	};
-
+	
 	$scope.usersByTeam = [];
-
+	
 	$scope.getUsersByTeam = function() {
 		$('#add_users_popup').hide();
- 		$('#newSprintTeam').removeClass('error');
- 		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
+		$('#newSprintTeam').removeClass('error');
+		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
 			$http.get('boards/users/' + $scope.newSprint.team).success(function(res){
 				$scope.newSprint.users = res;
 				console.log("Done fetching userlist:");
@@ -334,7 +340,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 			});
 		}
 	};
-
+	
 	$scope.removeUserFromSprint = function (user) {
 		var deleteIndex = -1;
 		$.each($scope.newSprint.users, function(index, value) {
@@ -344,7 +350,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		});
 		$scope.newSprint.users.splice(deleteIndex, 1);
 	};
-
+	
 	$scope.usersPopup = function() {
 		if (!$scope.newSprint.team || $scope.newSprint.team === '') {
 			$('#error_no_team').show();
@@ -353,13 +359,13 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		}
 		$('#add_users_popup').show();
 	};
-
+	
 	$scope.lastError = "";
-
+	
 	$scope.createSprint = function() {
 		if (checkSprintInput($scope)) {
 			console.log("create Sprint");
-			$http.post('sprints', $scope.newSprint).success(function(res){
+			$http.post('boards', $scope.newSprint).success(function(res){
 				console.log("Sprint created, updating list");
 				reload();
 				$('#newSprintName').focus();
@@ -367,7 +373,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		}
 		console.log($scope.newSprint);
 	};
-
+	
 	$scope.deleteSprint = function(sprint) {
 		if (confirm("Are you sure you want to delete this sprint?")) {
 			$http.delete(sprint._links.self.href).success(function(res){
@@ -376,18 +382,18 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 			});
 		}
 	};
-
+	
 	$scope.formatTime = formatTime;
-    $scope.getClassForStatus = getClassForStatus;
-    $scope.getStatusText = getStatusText;
+	$scope.getClassForStatus = getClassForStatus;
+	$scope.getStatusText = getStatusText;
 });
 
 availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.users = [];
 	$scope.newUser = { team: "" };
-
+	
 	getTeamList($scope, $http);
-
+	
 	$scope.getUsers = function(team) {
 		$http.get('boards/users/' + (team || "all")).success(function(res){
 			$scope.users = res;
@@ -395,7 +401,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 			console.log($scope.users);
 		});
 	};
-
+	
 	$scope.createUser = function() {
 		if (checkUser($scope.newUser)) {
 			console.log("create User");
@@ -408,7 +414,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 		}
 		console.log($scope.newUser);
 	};
-
+	
 	$scope.updateUser = function(userObject) {
 		if (checkUser(userObject)) {
 			console.log("update User");
@@ -419,24 +425,24 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 			});
 		}
 	};
-
+	
 	$scope.enableSaveButton = function(id) {
 		$('#' + id).prop('disabled', false);
 	};
-
+	
 	$scope.deleteUser = function(user) {
 		alert("Not yet supported");
 	};
-
+	
 	$scope.getUsers();
-
+	
 });
 
 availabilityBoard.controller('teamListController', function($scope, $http) {
 	getTeamList($scope, $http);
 	
 	$scope.newTeam = { name: "" };
-
+	
 	$scope.createTeam = function() {
 		if ($scope.newTeam.name.trim() !== "") {
 			console.log("create team");
@@ -449,10 +455,10 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 		} else {
 			$('#newTeamName').addClass("error");
 			$scope.lastError = "Team name must be set."
-      		$('#saveerror').show();
-      	}
+			$('#saveerror').show();
+		}
 	};
-
+	
 	$scope.deleteTeam = function(teamObject) {
 		if (checkUser(teamObject)) {
 			console.log("delete Team");
@@ -463,5 +469,5 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 			});
 		}
 	};
-
+	
 });

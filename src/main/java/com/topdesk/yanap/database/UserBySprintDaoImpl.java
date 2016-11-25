@@ -22,11 +22,11 @@ import org.springframework.stereotype.Component;
 public class UserBySprintDaoImpl implements UserBySprintDao {
 	private final EntityManagerFactory factory;
 	@Override
-	public List<UserBySprint> getAllForSprint(Sprint sprint) {
+	public List<UserBySprint> getAllForSprint(long sprintId) {
 		EntityManager entityManager = factory.createEntityManager();
 		try {
 			TypedQuery<UserBySprint> query = entityManager.createNamedQuery("UserBySprint.getBySprint", UserBySprint.class);
-			query.setParameter("sprint", sprint);
+			query.setParameter("sprintId", sprintId);
 			return query.getResultList();
 		}
 		finally {
@@ -63,7 +63,7 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 			tr = em.getTransaction();
 			tr.begin();
 			Query query = em.createNamedQuery("UserBySprint.deleteBySprint");
-			query.setParameter("sprint", sprint);
+			query.setParameter("sprintId", sprint);
 			query.executeUpdate();
 			tr.commit();
 		} catch (RuntimeException e) {
