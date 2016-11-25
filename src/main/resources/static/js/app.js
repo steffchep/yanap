@@ -308,11 +308,18 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 
 	getTeamList($scope, $http);
 
-	$http.get('boards').success(function(res){
-		$scope.boards = res;
-	});
+	function reload() {
+		$http.get('sprints').success(function(res){
+			$scope.sprints = res._embedded.sprints;
+		});
+		$scope.newSprint = { users: [] };
+	}
+	reload();
 
-	$scope.newSprint = { users: [] };
+	//TODO: remove once board.html accepts complete self-link
+	$scope.getId = function(sprint) {
+		return sprint._links.self.href.replace(/^.*\/(\d+)$/, '$1');
+	};
 
 	$scope.usersByTeam = [];
 
@@ -352,13 +359,10 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.createSprint = function() {
 		if (checkSprintInput($scope)) {
 			console.log("create Sprint");
-			$http.put('boards', $scope.newSprint).success(function(res){
+			$http.post('sprints', $scope.newSprint).success(function(res){
 				console.log("Sprint created, updating list");
-				$http.get('boards').success(function(res){
-					$scope.boards = res;
-					$scope.newSprint = {users: []};
-					$('#newSprintName').focus();
-				});
+				reload();
+				$('#newSprintName').focus();
 			});
 		}
 		console.log($scope.newSprint);
@@ -366,13 +370,9 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 
 	$scope.deleteSprint = function(sprint) {
 		if (confirm("Are you sure you want to delete this sprint?")) {
-			$http.delete('boards/' + sprint.id).success(function(res){
+			$http.delete(sprint._links.self.href).success(function(res){
 				console.log("Sprint deleted, updating list");
-				$http.get('boards').success(function(res){
-					$scope.boards = res;
-					$scope.newSprint = {users: []};
-					$('#newSprintName').focus();
-				});
+				reload();
 			});
 		}
 	};

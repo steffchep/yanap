@@ -25,8 +25,8 @@
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
-				<tr ng-repeat="sprint in boards | filter:filterText">
-					<td class="clickable name"><a href="board.html?id={{sprint.id}}">{{sprint.name}}</a></td>
+				<tr ng-repeat="sprint in sprints | filter:filterText">
+					<td class="clickable name"><a href="board.html?id={{getId(sprint)}}">{{sprint.name}}</a></td>
 					<td class="name">{{sprint.team}}</td>
 					<td class="date">{{formatTime(sprint.startDate)}}</td>
 					<td class="date">{{formatTime(sprint.endDate)}}</td>

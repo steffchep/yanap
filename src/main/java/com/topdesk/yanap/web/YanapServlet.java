@@ -58,11 +58,12 @@ public class YanapServlet {
 	}
 
 	@RequestMapping(value = "/boards/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<UserBySprint> doGetSingleSprint(@PathVariable long id) {
+	public SprintAndUsers doGetSingleSprint(@PathVariable long id) {
 
 		log.info("Get single sprint: " + id);
-
-		return userBySprintDao.getAllForSprint(sprintDao.getById(id));
+		
+		List<UserBySprint> users = userBySprintDao.getAllForSprint(sprintDao.getById(id));
+		return new SprintAndUsers(users);
 	}
 
 	@RequestMapping(value = "/boards/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,7 +80,7 @@ public class YanapServlet {
 		return sprintAndUsers;
 	}
 
-	@RequestMapping(value = "/availability/{sprintId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/boards/{sprintId}/availability", method = RequestMethod.POST)
 	public StatusUpdateData doSaveProperty(@PathVariable long sprintId, @RequestBody StatusUpdateData updateData) {
 
 		log.info("Save Property for sprint " + sprintId + ": " + updateData);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,14 +15,12 @@ import com.topdesk.yanap.database.UserBySprint;
 /**
  * Created by stephaniep on 01.06.2016.
  */
-@Getter
-@EqualsAndHashCode
-@ToString
+@Data
 public class SprintAndUsers {
 	@Getter
 	@EqualsAndHashCode
 	@ToString
-	class UserAndDays {
+	static class UserAndDays {
 		long id;
 		String name;
 		List<Float> days;
@@ -37,6 +36,9 @@ public class SprintAndUsers {
 	List<UserAndDays> developers;
 	List<UserAndDays> nondevelopers;
 
+	SprintAndUsers() {
+		
+	}
 	SprintAndUsers(List<UserBySprint> users) {
 		if (!users.isEmpty()) {
 			this.developers = new ArrayList<>();
