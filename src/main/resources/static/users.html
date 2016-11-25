@@ -26,16 +26,16 @@
 				<tr ng-repeat="user in users | filter:filterText">
 					<td class="name">{{user.name}}</td>
 					<td class="name" ng-model="user.team">
-						<select id="userTeam" ng-model="user.team" ng-change = "enableSaveButton('save_' + {{user.id}})">
+						<select id="userTeam" ng-model="user.team" ng-change = "enableSaveButton('save_' + {{$index}})">
 							<option value=""></option>
 							<option ng-repeat="team in teamlist">{{team.name}}</option>
 						</select>
 					</td>
 					<td class="status">
-						<input type="checkbox" value="1" ng-model="user.developer" ng-change = "enableSaveButton('save_' + {{user.id}})">
+						<input type="checkbox" value="1" ng-model="user.developer" ng-change = "enableSaveButton('save_' + {{$index}})">
 					</td>
 					<td class="actions">
-						<button id="save_{{user.id}}" disabled class="clickable" href="" ng-click="updateUser(user)">save</button>
+						<button id="save_{{$index}}" disabled class="clickable" href="" ng-click="updateUser(user)">save</button>
 						<!--<button class="clickable" href="" ng-click="deleteUser(user)">delete</button>-->
 					</td>
 				</tr>

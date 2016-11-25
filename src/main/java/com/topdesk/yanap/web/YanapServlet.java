@@ -17,10 +17,8 @@ import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.SprintRepository;
 import com.topdesk.yanap.database.Team;
 import com.topdesk.yanap.database.TeamDao;
-import com.topdesk.yanap.database.User;
 import com.topdesk.yanap.database.UserBySprint;
 import com.topdesk.yanap.database.UserBySprintDao;
-import com.topdesk.yanap.database.UserDao;
 
 @Slf4j
 @RestController
@@ -28,17 +26,8 @@ import com.topdesk.yanap.database.UserDao;
 public class YanapServlet {
 
 	private final SprintRepository sprintRepository;
-	private final UserDao userDao;
 	private final TeamDao teamDao;
 	private final UserBySprintDao userBySprintDao;
-
-	@RequestMapping(value = "boards/users/{team}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<User> doGetUserList(@PathVariable String team) {
-
-		log.info("Get user list for: {}", team);
-
-		return userDao.getByTeam(team);
-	}
 
 	@RequestMapping(value = "/boards/teams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Team> doGetTeamList() {
@@ -64,13 +53,6 @@ public class YanapServlet {
 		userBySprintDao.createForSprint(sprint, newSprint.getUsers());
 	}
 	
-	@RequestMapping(value = "/boards/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public User doSaveUser(@RequestBody User sprintAndUsers) {
-		userDao.update(sprintAndUsers);
-
-		return sprintAndUsers;
-	}
-
 	@RequestMapping(value = "/boards/{sprintId}/availability", method = RequestMethod.POST)
 	public StatusUpdateData doSaveProperty(@PathVariable long sprintId, @RequestBody StatusUpdateData updateData) {
 
@@ -78,14 +60,6 @@ public class YanapServlet {
 		userBySprintDao.saveAvailability(sprintId, updateData.getUserId(), updateData.getDayIndex(), updateData.getValue());
 
 		return updateData;
-	}
-
-	@RequestMapping(value = "/boards/users", method = RequestMethod.PUT)
-	public User doCreateUser(@RequestBody User newUser) {
-		log.info("Create User {}", newUser);
-		userDao.create(newUser);
-
-		return newUser;
 	}
 
 	@RequestMapping(value = "/boards/teams", method = RequestMethod.PUT)

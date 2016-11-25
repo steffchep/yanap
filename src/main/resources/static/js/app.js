@@ -333,8 +333,11 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		$('#add_users_popup').hide();
 		$('#newSprintTeam').removeClass('error');
 		if ($scope.newSprint.team && $scope.newSprint.team !== '') {
-			$http.get('boards/users/' + $scope.newSprint.team).success(function(res){
-				$scope.newSprint.users = res;
+			$http.get('users/search/findByTeam?team=' + $scope.newSprint.team).success(function(res){
+				$scope.newSprint.users = (res._embedded || {}).users || [];
+				$scope.newSprint.users.forEach(function(user) {
+					user.id = $scope.getId(user);
+				});
 				console.log("Done fetching userlist:");
 				console.log($scope.newSprint.users);
 			});
@@ -395,8 +398,8 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	getTeamList($scope, $http);
 	
 	$scope.getUsers = function(team) {
-		$http.get('boards/users/' + (team || "all")).success(function(res){
-			$scope.users = res;
+		$http.get('users' + (team ? '/search/findByTeam?team=' + team : '')).success(function(res){
+			$scope.users = (res._embedded || {}).users || [];
 			console.log("Done fetching userlist:");
 			console.log($scope.users);
 		});
@@ -405,7 +408,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.createUser = function() {
 		if (checkUser($scope.newUser)) {
 			console.log("create User");
-			$http.put('boards/users', $scope.newUser).success(function(res){
+			$http.post('users', $scope.newUser).success(function(res){
 				console.log("User created, updating list");
 				$scope.newUser = { team: "" };
 				$scope.getUsers();
@@ -418,7 +421,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.updateUser = function(userObject) {
 		if (checkUser(userObject)) {
 			console.log("update User");
-			$http.post('boards/users', userObject).success(function(res){
+			$http.put(userObject._links.self.href, userObject).success(function(res){
 				console.log("User updated, updating list");
 				$scope.getUsers();
 				$('#newUserName').focus();

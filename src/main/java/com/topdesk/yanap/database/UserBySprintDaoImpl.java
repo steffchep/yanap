@@ -85,13 +85,13 @@ public class UserBySprintDaoImpl implements UserBySprintDao {
 		EntityManager entityManager = factory.createEntityManager();
 
 		try {
+			entityManager.getTransaction().begin();
 			for (User user : users) {
 				UserBySprint userBySprint = new UserBySprint(sprint, user);
-				entityManager.getTransaction().begin();
 				entityManager.persist(userBySprint);
-				entityManager.getTransaction().commit();
 				result.add(userBySprint);
 			}
+			entityManager.getTransaction().commit();
 		}
 		finally {
 			entityManager.close();
