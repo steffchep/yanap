@@ -217,9 +217,9 @@ var getClassForStatus = function(status) {
 	return getStatusText(status).replace(/\s/g, "_");
 };
 
-var getTeamList = function($scope, $http) {
-	$http.get('boards/teams').success(function(res){
-		$scope.teamlist = res;
+function getTeamList($scope, $http) {
+	$http.get('teams').success(function(res){
+		$scope.teamlist = (res._embedded || {}).teams || [];
 	});
 }
 
@@ -449,7 +449,7 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 	$scope.createTeam = function() {
 		if ($scope.newTeam.name.trim() !== "") {
 			console.log("create team");
-			$http.put('boards/teams', $scope.newTeam).success(function(res){
+			$http.post('teams', $scope.newTeam).success(function(res){
 				console.log("Team created, updating list");
 				$scope.newTeam = { name: "" };
 				getTeamList($scope, $http);
@@ -465,7 +465,7 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 	$scope.deleteTeam = function(teamObject) {
 		if (checkUser(teamObject)) {
 			console.log("delete Team");
-			$http.delete('boards/teams/' + teamObject.id).success(function(res){
+			$http.delete(teamObject._links.self.href).success(function(res){
 				console.log("Team deleted, updating list");
 				getTeamList($scope, $http);
 				$('#newTeamName').focus();

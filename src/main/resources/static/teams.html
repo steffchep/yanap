@@ -24,7 +24,7 @@
 				<tr ng-repeat="team in teamlist | filter:filterText">
 					<td class="name">{{team.name}}</td>
 					<td class="actions">
-						<button id="delete_{{team.id}}" class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
+						<button id="delete_{{$index}}" class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
 					</td>
 				</tr>
 				<tr class="spacer">

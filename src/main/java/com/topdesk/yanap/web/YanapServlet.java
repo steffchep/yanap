@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.SprintRepository;
-import com.topdesk.yanap.database.Team;
-import com.topdesk.yanap.database.TeamDao;
 import com.topdesk.yanap.database.UserBySprint;
 import com.topdesk.yanap.database.UserBySprintDao;
 
@@ -26,16 +24,7 @@ import com.topdesk.yanap.database.UserBySprintDao;
 public class YanapServlet {
 
 	private final SprintRepository sprintRepository;
-	private final TeamDao teamDao;
 	private final UserBySprintDao userBySprintDao;
-
-	@RequestMapping(value = "/boards/teams", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Team> doGetTeamList() {
-
-		log.info("Get team list");
-
-		return teamDao.getAll();
-	}
 
 	@RequestMapping(value = "/boards/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SprintAndUsers doGetSingleSprint(@PathVariable long id) {
@@ -62,18 +51,4 @@ public class YanapServlet {
 		return updateData;
 	}
 
-	@RequestMapping(value = "/boards/teams", method = RequestMethod.PUT)
-	public void doCreateTeam(@RequestBody Team newTeam) {
-		log.info("Create Team {}", newTeam);
-
-		teamDao.create(newTeam);
-	}
-
-	@RequestMapping(value = "/boards/teams/{id}", method = RequestMethod.DELETE)
-	public Team doDeleteTeam(@PathVariable long id, @RequestBody Team deleteme) {
-		log.info("Delete Team with id {}", id);
-		teamDao.delete(id);
-		return deleteme;
-	}
-	
 }
