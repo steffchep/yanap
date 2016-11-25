@@ -45,8 +45,8 @@
 							<option ng-repeat="team in teamlist">{{team.name}}</option>
 						</select>
 					</td>
-					<td><input ui-date type="date" id="newSprintStart" placeholder="JJJJ-MM-TT" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
-					<td><input ui-date type="date" id="newSprintEnd" placeholder="JJJJ-MM-TT" ng-model="newSprint.endDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
+					<td><input ui-date type="date" id="newSprintStart" placeholder="JJJJ-MM-TT" min="{{getMinStartDate()}}" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
+					<td><input ui-date type="date" id="newSprintEnd" placeholder="JJJJ-MM-TT" min="{{getMinEndDate()}}" ng-model="newSprint.endDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
 					<td>
 						<button ng-click="usersPopup()">Show Members ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->

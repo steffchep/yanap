@@ -49,11 +49,14 @@ var formatTime = function(timestamp) {
 	return moment(formatMe).format('ll');
 };
 
+function getMinStartDate() {
+	return moment(new Date()).startOf('day').subtract(7, "days").startOf('isoweek');
+}
 var checkDateSanity = function(sprint) {
-	var now = moment(new Date()).startOf('day');
+	var minStartDate = getMinStartDate();
 	var start = moment(new Date(sprint.startDate));
 	var end = moment(new Date(sprint.endDate));
-	return start.isBefore(end) && start.isAfter(now);
+	return start.isBefore(end) && start.isAfter(minStartDate);
 };
 
 var checkSprintInput = function($scope) {
@@ -320,7 +323,19 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 			$scope.sprints = (res._embedded || {}).sprints || [];
 			$scope.hasMore = (res.page || {}).totalPages > 1;
 		});
-		$scope.newSprint = { users: [] };
+		
+		var start = (new Date().getDay() == 1 ? moment() : moment().endOf('isoweek').add(1, 'day'));
+		$scope.newSprint = {
+			startDate: start.format('YYYY-MM-DD'),
+			endDate: start.add(2, "weeks").format('YYYY-MM-DD'),
+			users: []
+		};
+		$scope.getMinStartDate = function() {
+			return getMinStartDate().format('YYYY-MM-DD');
+		};
+		$scope.getMinEndDate = function() {
+			return $scope.newSprint.startDate;
+		};
 	}
 	reload();
 	$scope.loadMoreSprints = function() {
