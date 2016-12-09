@@ -366,10 +366,10 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 			$scope.hasMore = (res.page || {}).totalPages > 1;
 		});
 		
-		var start = (new Date().getDay() === 1 ? moment() : moment().endOf('isoweek').add(1, 'day'));
 		$scope.newSprint = {
-			startDate: start.format('YYYY-MM-DD'),
-			endDate: start.add(2, "weeks").format('YYYY-MM-DD'),
+			startDate: "",
+			endDate: "",
+			team: "",
 			users: []
 		};
 		$scope.getMinStartDate = function() {
@@ -384,7 +384,25 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 		pageSize *= 2;
 		reload();
 	};
-	
+	$scope.updateDates = function() {
+		var latestFoundSprintEnd = null;
+		$scope.sprints.forEach(function (sprint) {
+			if (sprint.team == $scope.newSprint.team && sprint.endDate > '' && (latestFoundSprintEnd == null || latestFoundSprintEnd.before(moment(sprint.endDate, 'YYYY-MM-DD')))) {
+				latestFoundSprintEnd = moment(sprint.endDate, 'YYYY-MM-DD');
+			}
+		});
+		if (latestFoundSprintEnd == null) {
+			latestFoundSprintEnd = (new Date().getDay() === 1 ? moment() : moment().endOf('isoweek').add(1, 'day'));
+		}
+		var sprintDays = 14;
+		$scope.teamlist.forEach(function(team) {
+			if (team.name == $scope.newSprint.team) {
+				sprintDays = team.sprintDays;
+			}
+		});
+		$scope.newSprint.startDate = latestFoundSprintEnd.format('YYYY-MM-DD');
+		$scope.newSprint.endDate = moment(latestFoundSprintEnd).add(sprintDays, 'days').format('YYYY-MM-DD');
+	};
 	//TODO: remove need for this
 	$scope.getId = function(entity) {
 		return entity._links.self.href.replace(/^.*\/(\d+)$/, '$1');
@@ -506,9 +524,14 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 
 availabilityBoard.controller('teamListController', function($scope, $http) {
 	"use strict";
-	getTeamList($scope, $http);
 	
+	function reload() {
+		getTeamList($scope, $http);
+		$('#newTeamName').focus();
+	}
+
 	$scope.newTeam = { name: "" };
+	reload();
 	
 	$scope.createTeam = function() {
 		if ($scope.newTeam.name.trim() !== "") {
@@ -525,14 +548,19 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 			$('#saveerror').show();
 		}
 	};
+	$scope.saveTeam = function(teamObject) {
+		$http.put(teamObject._links.self.href, teamObject).success(function() {
+			console.log("Team updated");
+			reload();
+		})
+	};
 	
 	$scope.deleteTeam = function(teamObject) {
 		if (checkUser(teamObject)) {
 			console.log("delete Team");
 			$http.delete(teamObject._links.self.href).success(function(){
 				console.log("Team deleted, updating list");
-				getTeamList($scope, $http);
-				$('#newTeamName').focus();
+				reload();
 			});
 		}
 	};

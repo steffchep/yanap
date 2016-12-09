@@ -160,7 +160,7 @@ input[type=submit], button {
 	box-shadow: 1px 1px 2px #000;
 }
 
-input[type=submit]:disabled {
+input[type=submit]:disabled, input.newStuff:disabled {
 	color: gray;
 }
 

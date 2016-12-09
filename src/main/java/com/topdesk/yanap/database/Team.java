@@ -33,4 +33,7 @@ public class Team {
 	
 	@Column(name = "name")
 	private String name;
+	
+	@Column(columnDefinition = "INTEGER DEFAULT 14 NOT NULL")
+	private int sprintDays;
 }

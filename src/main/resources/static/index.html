@@ -34,12 +34,12 @@
 				<tr class="new">
 					<td><input type="text" maxlength="50" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
 					<td>
-						<select id="newSprintTeam" ng-model="newSprint.team" ng-change="getUsersByTeam()">
+						<select id="newSprintTeam" ng-model="newSprint.team" ng-change="getUsersByTeam(); updateDates()">
 							<option ng-repeat="team in teamlist">{{team.name}}</option>
 						</select>
 					</td>
-					<td><input ui-date type="date" id="newSprintStart" placeholder="JJJJ-MM-TT" min="{{getMinStartDate()}}" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
-					<td><input ui-date type="date" id="newSprintEnd" placeholder="JJJJ-MM-TT" min="{{getMinEndDate()}}" ng-model="newSprint.endDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')"></td>
+					<td><input ui-date class="newStuff" type="date" id="newSprintStart" placeholder="JJJJ-MM-TT" min="{{getMinStartDate()}}" ng-model="newSprint.startDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')" ng-disabled="newSprint.team == ''"></td>
+					<td><input ui-date class="newStuff" type="date" id="newSprintEnd" placeholder="JJJJ-MM-TT" min="{{getMinEndDate()}}" ng-model="newSprint.endDate" onkeydown="$('#newSprintStart, #newSprintEnd').removeClass('error')" ng-disabled="newSprint.team == ''"></td>
 					<td>
 						<button ng-click="usersPopup()">Show Members ({{newSprint.users.length}})</button>
 						<!--suppress HtmlUnknownTag -->

@@ -22,11 +22,14 @@
 			<table>
 				<tr>
 					<th>Team</th>
+					<th>Sprint Days</th>
 					<th></th>
 				</tr>
 				<tr ng-repeat="team in teamlist | filter:filterText">
 					<td class="name">{{team.name}}</td>
+					<td class="sprint-days"><input type="number" min="1" max="28" ng-model="team.sprintDays" ng-change="team.sprintDaysChanged = true"/></td>
 					<td class="actions">
+						<button id="save_{{$index}}" class="clickable" href="" ng-click="saveTeam(team)" ng-disabled="team.sprintDays > 1 && team.sprintDays < 28 && !team.sprintDaysChanged">save</button>
 						<button id="delete_{{$index}}" class="clickable" href="" ng-click="deleteTeam(team)">delete</button>
 					</td>
 				</tr>
@@ -35,6 +38,7 @@
 				</tr>
 				<tr class="new">
 					<td><input type="text" id="newTeamName" value="" placeholder="Team Name" ng-model="newTeam.name" onkeydown="$('#newTeamName').removeClass('error')"></td>
+					<td><input type="text" id="newTeamSprintDays" value="14" placeholder="Days in Sprint" ng-model="newTeam.sprintDays"></td>
 					<td><input type="submit" value="Add Team" ng-click="createTeam()"></td>
 				</tr>
 			</table>
