@@ -13,7 +13,13 @@
 
 <body>
 	<div class="content">
-		<h1>Sprint List</h1>
+		<div class="sidebyside">
+			<h1>Sprint List</h1>
+			<div class="menu">
+				<a class="clickable" href="users.html">&raquo; Users</a>
+				<a class="clickable" href="teams.html">&raquo; Teams</a>
+			</div>
+		</div>
 		<label>Filter by sprint name or team: <input class="searchbox" ng-model="filterText"></label>
 		<form action="" method="POST">
 			<table>
@@ -24,19 +30,6 @@
 					<th>End</th>
 					<th>Status</th>
 					<th>Action</th>
-				</tr>
-				<tr ng-repeat="sprint in sprints | filter:filterText">
-					<td class="clickable name"><a href="board.html?id={{getId(sprint)}}">{{sprint.name}}</a></td>
-					<td class="name">{{sprint.team}}</td>
-					<td class="date">{{formatTime(sprint.startDate)}}</td>
-					<td class="date">{{formatTime(sprint.endDate)}}</td>
-					<td class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</td>
-					<td class="actions">
-						 <a class="clickable" href="" ng-click="deleteSprint(sprint)">delete</a>
-					</td>
-				</tr>
-				<tr class="spacer">
-					<td class="spacer" colspan="12"></td>
 				</tr>
 				<tr class="new">
 					<td><input type="text" maxlength="50" id="newSprintName" value="" placeholder="Sprint Name" ng-model="newSprint.name" onkeydown="$('#newSprintName').removeClass('error')"></td>
@@ -62,11 +55,22 @@
 					</td>
 					<td><input type="submit" value="Add Sprint" ng-click="createSprint()"></td>
 				</tr>
+				<tr class="spacer">
+					<td class="spacer" colspan="12"></td>
+				</tr>
+				<tr ng-repeat="sprint in sprints | filter:filterText">
+					<td class="clickable name"><a href="board.html?id={{getId(sprint)}}">{{sprint.name}}</a></td>
+					<td class="name">{{sprint.team}}</td>
+					<td class="date">{{formatTime(sprint.startDate)}}</td>
+					<td class="date">{{formatTime(sprint.endDate)}}</td>
+					<td class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</td>
+					<td class="actions">
+						 <a class="clickable" href="" ng-click="deleteSprint(sprint)">delete</a>
+					</td>
+				</tr>
 			</table>
 		</form>
 		<div ng-show="hasMore"><a class="clickable" ng-click="loadMoreSprints()">&raquo; show more</a></div>
-		<div><a class="clickable" href="users.html">&raquo; User Management</a></div>
-		<div><a class="clickable" href="teams.html">&raquo; Team Management</a></div>
 	</div>
 	<div class="errorpopup" style="display:none" id="saveerror" onclick="$('#saveerror').hide();">
 		<div>
