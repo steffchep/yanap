@@ -7,12 +7,13 @@ var weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "", ""];
 var daysInWeek = 7;
 
 var createTableHeaders = function(sprint) {
+	"use strict";
 	var start = moment(new Date(sprint.startDate)),
 		end = moment(new Date(sprint.endDate)),
 		days = end.diff(start, "days"),
 		headers = [], daysPos = start.day() - 1, headersPos = 0;
-	
-	for (var i = 0; i < days; i++) {
+	var i;
+	for (i = 0; i < days; i++) {
 		if (daysPos === weekDays.length) {
 			daysPos = 0;
 		}
@@ -26,11 +27,13 @@ var createTableHeaders = function(sprint) {
 };
 
 var adjustSprintDaysForPersons = function(person, length) {
+	"use strict";
 	var rest = person.days.length - length;
 	person.days.splice(length, rest);
 };
 
 var	adjustSprintDays = function (sprint, length) {
+	"use strict";
 	if (sprint.developers && sprint.developers.length > 0 && sprint.developers[0].days.length > length) {
 		$.each(sprint.developers, function(index, value) {
 			adjustSprintDaysForPersons(value, length);
@@ -45,14 +48,17 @@ var	adjustSprintDays = function (sprint, length) {
 
 
 var formatTime = function(timestamp) {
+	"use strict";
 	var formatMe = new Date(timestamp); // work around deprecation warning
 	return moment(formatMe).format('ll');
 };
 
 function getMinStartDate() {
+	"use strict";
 	return moment(new Date()).startOf('day').subtract(7, "days").startOf('isoweek');
 }
 var checkDateSanity = function(sprint) {
+	"use strict";
 	var minStartDate = getMinStartDate();
 	var start = moment(new Date(sprint.startDate));
 	var end = moment(new Date(sprint.endDate));
@@ -60,6 +66,7 @@ var checkDateSanity = function(sprint) {
 };
 
 var checkSprintInput = function($scope) {
+	"use strict";
 	$scope.lastError = "";
 	if (!$scope.newSprint.name || $scope.newSprint.name === '') {
 		$scope.lastError = "Sprint name must be set!<br>";
@@ -74,7 +81,7 @@ var checkSprintInput = function($scope) {
 		$scope.lastError += "Team must be set!<br>";
 		$('#newSprintTeam').addClass("error");
 	}
-	if ($scope.newSprint.users.length == 0) {
+	if ($scope.newSprint.users.length === 0) {
 		$scope.lastError += "There must be at least one team member!<br>";
 	}
 	
@@ -100,23 +107,27 @@ var checkSprintInput = function($scope) {
 		return false;
 	}
 	return true;
-}
+};
 
 var checkUser = function(user) {
+	"use strict";
 	return true;
 };
 
 var getParameterByName = function (name) {
+	"use strict";
 	var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
 	var results = regex.exec(location.href);
 	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
 var makeId = function(string) {
+	"use strict";
 	return string.replace(/\s/g, "_");
-}
+};
 
 var getMarkup = function(availability) {
+	"use strict";
 	switch(availability) {
 		case 0:
 			return { class: "noneselected", character : "?"};
@@ -136,6 +147,7 @@ var getMarkup = function(availability) {
 };
 
 var getStatusText = function(status) {
+	"use strict";
 	switch(status) {
 		case 1:
 			return "upcoming";
@@ -147,7 +159,9 @@ var getStatusText = function(status) {
 };
 
 var calculateDevDays = function(developers) {
+	"use strict";
 	var sum = 0;
+	var i, j;
 	for (i = 0; i < developers.length; i++) {
 		for (j = 0; j < developers[i].days.length; j++) {
 			if (developers[i].days[j] < 2) {
@@ -159,7 +173,9 @@ var calculateDevDays = function(developers) {
 };
 
 var getUnplannedAbsences = function(developers) {
+	"use strict";
 	var sum = 0;
+	var i, j;
 	for (i = 0; i < developers.length; i++) {
 		for (j = 0; j < developers[i].days.length; j++) {
 			if (developers[i].days[j] === 4) {
@@ -171,6 +187,7 @@ var getUnplannedAbsences = function(developers) {
 };
 
 var totalDays = function(developers) {
+	"use strict";
 	if (developers.length > 0) {
 		return developers.length * (developers[0].days.length - 1);
 	}
@@ -178,6 +195,7 @@ var totalDays = function(developers) {
 };
 
 var percentTotal = function(developers) {
+	"use strict";
 	if (developers.length > 0) {
 		var sum = calculateDevDays(developers);
 		var total = totalDays(developers);
@@ -187,6 +205,7 @@ var percentTotal = function(developers) {
 };
 
 var availabilityPopup = function(id) {
+	"use strict";
 	var status = $('#sprintStatus').html(),
 		currentPopup = $('#' + id),
 		allPopups = $("ul");
@@ -194,7 +213,7 @@ var availabilityPopup = function(id) {
 		alert("This sprint has already ended, it is read-only");
 	} else if(!currentPopup.is(":visible")) {
 		allPopups.hide();
-		currentPopup.show(); // TODO: set absolute position manually
+		currentPopup.show();
 		if	(status === "upcoming") {
 			$('.hideonupcoming').hide();
 		}
@@ -206,21 +225,42 @@ var availabilityPopup = function(id) {
 
 
 var statusPopup = function(id) {
+	"use strict";
 	var currentPopup = $('#' + id),
 		allPopups = $("ul");
 	if(!currentPopup.is(":visible")) {
 		allPopups.hide();
-		currentPopup.show(); // TODO: set absolute position manually
+		currentPopup.show();
 	} else {
 		allPopups.hide();
 	}
 };
 
+var confirmPopup = function(text, yescallback, nocallback) {
+	"use strict";
+	var html= $('<div class="errorpopup"><div class="confirm"><p>' + text + '</p><input type="submit" value="yes" name="Yes" id="confirm_ok"><input type="reset" value="no" name="No" id="confirm_cancel"></div></div>');
+	$("body").append(html);
+	$('#confirm_ok').on("click", function() {
+		if (yescallback) {
+			yescallback();
+		}
+		html.remove();
+	});
+	$('#confirm_cancel').on("click", function() {
+		if (nocallback) {
+			nocallback();
+		}
+		html.remove();
+	});
+};
+
 var getClassForStatus = function(status) {
+	"use strict";
 	return getStatusText(status).replace(/\s/g, "_");
 };
 
 function getTeamList($scope, $http) {
+	"use strict";
 	$http.get('teams').success(function(res){
 		$scope.teamlist = (res._embedded || {}).teams || [];
 	});
@@ -229,6 +269,7 @@ function getTeamList($scope, $http) {
 var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
 
 availabilityBoard.controller('availabilityController', function($scope, $http) {
+	"use strict";
 	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
 	
@@ -247,16 +288,16 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 	var disableSaveButton = function(disabledText) {
 		var updateButton = $('#updateSprintButton');
 		if (disabledText) {
-			updateButton.text(disabledText)
+			updateButton.text(disabledText);
 		}
 		updateButton.prop("disabled", true);
-	}
+	};
 	
 	var enableSaveButton = function() {
 		var updateButton = $('#updateSprintButton');
 		updateButton.text(updateButtonOriginalText);
 		updateButton.prop("disabled", false);
-	}
+	};
 	
 	$scope.saveSprint = function() {
 		console.log("saving " + id);
@@ -298,7 +339,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 		$('.hideonupcoming').show();
 		$("ul").hide();
 		$http.post('boards/' + id + "/availability", { "userId" : person.id, "dayIndex" : index, "value" : value})
-			.success(function(res) {
+			.success(function() {
 				console.log("save property okay!");
 			})
 			.error(function(err) {
@@ -314,6 +355,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 
 var pageSize = 20;
 availabilityBoard.controller('boardListController', function($scope, $http) {
+	"use strict";
 	$scope.boards = [];
 	
 	getTeamList($scope, $http);
@@ -324,7 +366,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 			$scope.hasMore = (res.page || {}).totalPages > 1;
 		});
 		
-		var start = (new Date().getDay() == 1 ? moment() : moment().endOf('isoweek').add(1, 'day'));
+		var start = (new Date().getDay() === 1 ? moment() : moment().endOf('isoweek').add(1, 'day'));
 		$scope.newSprint = {
 			startDate: start.format('YYYY-MM-DD'),
 			endDate: start.add(2, "weeks").format('YYYY-MM-DD'),
@@ -360,7 +402,6 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 					user.id = $scope.getId(user);
 				});
 				console.log("Done fetching userlist:");
-				console.log($scope.newSprint.users);
 			});
 		}
 	};
@@ -389,7 +430,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	$scope.createSprint = function() {
 		if (checkSprintInput($scope)) {
 			console.log("create Sprint");
-			$http.post('boards', $scope.newSprint).success(function(res){
+			$http.post('boards', $scope.newSprint).success(function(){
 				console.log("Sprint created, updating list");
 				reload();
 				$('#newSprintName').focus();
@@ -399,12 +440,12 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 	};
 	
 	$scope.deleteSprint = function(sprint) {
-		if (confirm("Are you sure you want to delete this sprint?")) {
-			$http.delete(sprint._links.self.href).success(function(res){
+		confirmPopup("Are you sure you want to delete sprint <b>'" + sprint.name + "'</b>?", function() {
+			$http.delete(sprint._links.self.href).success(function(){
 				console.log("Sprint deleted, updating list");
 				reload();
 			});
-		}
+		});
 	};
 	
 	$scope.formatTime = formatTime;
@@ -413,6 +454,7 @@ availabilityBoard.controller('boardListController', function($scope, $http) {
 });
 
 availabilityBoard.controller('userListController', function($scope, $http) {
+	"use strict";
 	$scope.users = [];
 	$scope.newUser = { team: "" };
 	
@@ -429,7 +471,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.createUser = function() {
 		if (checkUser($scope.newUser)) {
 			console.log("create User");
-			$http.post('users', $scope.newUser).success(function(res){
+			$http.post('users', $scope.newUser).success(function(){
 				console.log("User created, updating list");
 				$scope.newUser = { team: "" };
 				$scope.getUsers();
@@ -442,7 +484,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 	$scope.updateUser = function(userObject) {
 		if (checkUser(userObject)) {
 			console.log("update User");
-			$http.put(userObject._links.self.href, userObject).success(function(res){
+			$http.put(userObject._links.self.href, userObject).success(function(){
 				console.log("User updated, updating list");
 				$scope.getUsers();
 				$('#newUserName').focus();
@@ -463,6 +505,7 @@ availabilityBoard.controller('userListController', function($scope, $http) {
 });
 
 availabilityBoard.controller('teamListController', function($scope, $http) {
+	"use strict";
 	getTeamList($scope, $http);
 	
 	$scope.newTeam = { name: "" };
@@ -470,7 +513,7 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 	$scope.createTeam = function() {
 		if ($scope.newTeam.name.trim() !== "") {
 			console.log("create team");
-			$http.post('teams', $scope.newTeam).success(function(res){
+			$http.post('teams', $scope.newTeam).success(function(){
 				console.log("Team created, updating list");
 				$scope.newTeam = { name: "" };
 				getTeamList($scope, $http);
@@ -478,7 +521,7 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 			});
 		} else {
 			$('#newTeamName').addClass("error");
-			$scope.lastError = "Team name must be set."
+			$scope.lastError = "Team name must be set.";
 			$('#saveerror').show();
 		}
 	};
@@ -486,7 +529,7 @@ availabilityBoard.controller('teamListController', function($scope, $http) {
 	$scope.deleteTeam = function(teamObject) {
 		if (checkUser(teamObject)) {
 			console.log("delete Team");
-			$http.delete(teamObject._links.self.href).success(function(res){
+			$http.delete(teamObject._links.self.href).success(function(){
 				console.log("Team deleted, updating list");
 				getTeamList($scope, $http);
 				$('#newTeamName').focus();
