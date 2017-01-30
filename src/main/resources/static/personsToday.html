@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Person Availability</title>
+		<script src="js/lib/moment-with-locales-2.11.2.js"></script>
+		<script src="/webjars/knockout/3.4.1/knockout.js"></script>
+		<script src="js/persons.js"></script>
+		<link rel="stylesheet" href="css/widgetStyle.css"/>
+	</head>
+
+	<body>
+		<div class="content">
+			<div data-bind="if: teamName">
+				<h3>In Office</h3>
+				<ul>
+					<!-- ko foreach: teamMembers -->
+						<!-- ko if: $data.available -->
+						<li class="teamMember" data-bind="if: $data.available">
+							<span data-bind="class: $data.developer ? 'developer' : 'other'"></span>
+							<span class="name" data-bind="text: $data.name"></span>
+							<span class="availability" data-bind="text: '(' + $data.availability + ')'"></span>
+						</li>
+						<!-- /ko -->
+					<!-- /ko -->
+				</ul>
+				<h3>Out of Office</h3>
+				<ul>
+					<!-- ko foreach: teamMembers -->
+						<!-- ko if: !$data.available -->
+						<li class="teamMember">
+							<span data-bind="class: $data.developer ? 'developer' : 'other'"></span>
+							<span class="name" data-bind="text: $data.name"></span>
+						</li>
+						<!-- /ko -->
+					<!-- /ko -->
+				</ul>
+			</div>
+			<div data-bind="if: !teamName" class="error">
+				No team name specified. Add ?team=... to the url
+			</div>
+		</div>
+	</body>
+</html>
