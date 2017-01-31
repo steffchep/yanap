@@ -102,9 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 		me.availabilities.subscribe(function(data) {
-			var svg = dimple.newSvg("#diagram", 600, 300);
+			var svg = dimple.newSvg("#diagram", 450, 190);
 			var myChart = new dimple.chart(svg, data);
-			myChart.setBounds(10, 10, 590, 300);
+			myChart.setBounds(20, 10, "100%,-10px", "100%,-58px");
 			var x = myChart.addCategoryAxis("x", "Day");
 			x.addOrderRule("index");
 			myChart.addMeasureAxis("y", "Percent");
