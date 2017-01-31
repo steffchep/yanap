@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	function get(params) {
 		var oReq = new XMLHttpRequest();
-		oReq.open("GET", params.url);
+		oReq.open('GET', params.url);
 		if (params.success) {
-			oReq.addEventListener("load", function() {
+			oReq.addEventListener('load', function() {
 				params.success(JSON.parse(oReq.responseText))
 			});
 		}
 		if (params.error) {
-			oReq.addEventListener("error", function() {
+			oReq.addEventListener('error', function() {
 				params.error()
 			});
 		}
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	function getCurrentDay(sprint) {
 		var currentDayStart = moment(sprint.startDate).startOf('day'),
-			indizes = ["day01", "day02", "day03", "day04", "day05", "day06", "day07", "day08", "day09", "day10",
-				"day11", "day12", "day13", "day14", "day15", "day16", "day17", "day18", "day19", "day20"],
+			indizes = ['day01', 'day02', 'day03', 'day04', 'day05', 'day06', 'day07', 'day08', 'day09', 'day10',
+				'day11', 'day12', 'day13', 'day14', 'day15', 'day16', 'day17', 'day18', 'day19', 'day20'],
 			todayStart = moment(new Date()).startOf('day'),
 			index = 0;
 		
@@ -89,43 +89,33 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 		function formatAvailability(dbvalue) {
-			if (dbvalue <= 1) {
-				return parseInt(dbvalue * 100) + " %";
+			switch (dbvalue) {
+				case .5: return '50 %';
+				case 1: return '100 %';
+				case 0: return '?';
+				default: return '0 %';
 			}
-			return "0%";
+			return '0%';
 		}
 		
 		function showResult(result) {
 			const currentDay = getCurrentDay(result.sprint);
 			
 			result.users.sort(function (u1, u2) {
-				// var a1 = mapAvailabilityToSort(u1.availability[currentDay]);
-				// var a2 = mapAvailabilityToSort(u2.availability[currentDay]);
-				// return a2 > a1 ? 1 : a1 == a2 ? (u1.name > u2.name ? 1 : u1.name == u2.name ? 0 : -1) : -1;
 				return u1.name > u2.name ? 1 : u1.name == u2.name ? 0 : -1;
 			});
 			result.users.forEach(function(user) {
-				user.available = user.availability[currentDay] <= 1;
-				user.availability = formatAvailability(user.availability[currentDay]);
+				var availabilityType = user.availability[currentDay];
+				user.available = availabilityType == 0.5 || availabilityType == 1 || availabilityType == 2;
+				user.availability = formatAvailability(availabilityType);
 			});
 
 			me.teamMembers(result.users);
-			
-			// var inOffice = $('#inOffice'),
-			// 	outOfOffice = $('#outOfOffice');
-			// $.forEach(result.users, function(i, user) {
-			// 	var target = user.availability[currentDay] > 0 && user.availability[currentDay] <= 1 ? inOffice : outOfOffice;
-			// 	$('<tr class="user"><td class="name"></td><td class="availability"></td><td class="developer"></td></tr>')
-			// 		.find('.name').text(user.name).end()
-			// 		.find('.availability').text(formatAvailability(user.availability[currentDay])).end()
-			// 		.find('.developer').text(user.developer).end()
-			// 		.appendTo(target);
-			// })
 		}
 
 		if (me.teamName) {
 			fetchAvailability(me.teamName);
-			window.setInterval(fetchAvailability, 120000, me.teamName);
+			window.setInterval(fetchAvailability, 300000, me.teamName);
 		}
 	})());
 	

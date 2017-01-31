@@ -6,36 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	function get(params) {
 		var oReq = new XMLHttpRequest();
-		oReq.open("GET", params.url);
+		oReq.open('GET', params.url);
 		if (params.success) {
-			oReq.addEventListener("load", function() {
+			oReq.addEventListener('load', function() {
 				params.success(JSON.parse(oReq.responseText))
 			});
 		}
 		if (params.error) {
-			oReq.addEventListener("error", function() {
+			oReq.addEventListener('error', function() {
 				params.error()
 			});
 		}
 		oReq.send();
 	}
 	
-	const days = ["day01", "day02", "day03", "day04", "day05", "day06", "day07", "day08", "day09", "day10",
-		"day11", "day12", "day13", "day14", "day15", "day16", "day17", "day18", "day19", "day20"];
-	function getCurrentDayIndex(sprint) {
-		var currentDayStart = moment(sprint.startDate).startOf('day'),
-			todayStart = moment(new Date()).startOf('day'),
-			index = 0;
-		
-		while (currentDayStart.isBefore(todayStart) && index < days.length) {
-			currentDayStart = currentDayStart.add(1, 'day');
-			while (currentDayStart.format('e') == 0 || currentDayStart.format('e') == 6) {
-				currentDayStart = currentDayStart.add(1, 'day');
-			}
-			index++;
-		}
-		return index;
-	}
+	const days = ['day01', 'day02', 'day03', 'day04', 'day05', 'day06', 'day07', 'day08', 'day09', 'day10',
+		'day11', 'day12', 'day13', 'day14', 'day15', 'day16', 'day17', 'day18', 'day19', 'day20'];
 	ko.applyBindings(new (function() {
 		var me = this;
 		this.teamName = getTeamName();
@@ -99,27 +85,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if (me.teamName) {
 			fetchAvailability(me.teamName);
+			window.setInterval(fetchAvailability, 300000, me.teamName);
 		}
 		
 		me.availabilities.subscribe(function(data) {
-			var svg = dimple.newSvg("#diagram", 450, 180);
+			var node = document.getElementById('diagram');
+			node.innerHTML = '';
+			var svg = dimple.newSvg(node, 450, 170);
 			var myChart = new dimple.chart(svg, data);
-			myChart.setBounds(20, 10, "100%,-10px", "100%,-58px");
-			var x = myChart.addCategoryAxis("x", "Day");
-			x.addOrderRule("index");
-			myChart.addMeasureAxis("y", "Percent");
-			var s = myChart.addSeries(null, dimple.plot.line);
+			myChart.setBounds(20, 10, '100%,-10px', '100%,-58px');
+			var x = myChart.addCategoryAxis('x', 'Day');
+			x.addOrderRule('index');
+			myChart.addMeasureAxis('y', 'Percent');
+			myChart.addSeries(null, dimple.plot.line);
 			myChart.draw();
-			// x.shapes.selectAll('text').attr('transform',
-			// 	function () {
-			// 		var transformAttributeValue = d3.select(this).attr('transform');
-			//
-			// 		if (transformAttributeValue) {
-			// 			transformAttributeValue = transformAttributeValue.replace('rotate(90,', 'rotate(45,');
-			// 		}
-			//
-			// 		return transformAttributeValue;
-			// 	});
 		});
 	})());
 	
