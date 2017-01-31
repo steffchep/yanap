@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 		me.availabilities.subscribe(function(data) {
-			var svg = dimple.newSvg("#diagram", 450, 190);
+			var svg = dimple.newSvg("#diagram", 450, 180);
 			var myChart = new dimple.chart(svg, data);
 			myChart.setBounds(20, 10, "100%,-10px", "100%,-58px");
 			var x = myChart.addCategoryAxis("x", "Day");
