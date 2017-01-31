@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Sprint Availability</title>
+		<script src="js/lib/moment-with-locales-2.11.2.js"></script>
+		<script src="/webjars/knockout/3.4.1/knockout.js"></script>
+		<script src="/webjars/d3js/3.4.11/d3.min.js"></script>
+		<script src="/webjars/dimple/2.2.0/dimple.min.js"></script>
+		<script src="js/sprint.js"></script>
+		<link rel="stylesheet" href="css/widgetStyle.css"/>
+	</head>
+
+	<body>
+		<div class="content">
+			<div data-bind="if: teamName">
+				<h3><span data-bind="text: teamName"></span> Availibility</h3>
+				<div id="diagram"></div>
+			</div>
+			<div data-bind="if: !teamName" class="error">
+				No team name specified. Add ?team=... to the url
+			</div>
+		</div>
+	</body>
+</html>
