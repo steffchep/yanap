@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				case 0: return '?';
 				default: return '0 %';
 			}
-			return '0%';
 		}
 		
 		function showResult(result) {
@@ -106,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 			result.users.forEach(function(user) {
 				var availabilityType = user.availability[currentDay];
-				user.available = availabilityType == 0.5 || availabilityType == 1 || availabilityType == 2;
+				user.available = availabilityType == 0.5 || availabilityType == 1 || availabilityType == 3;
 				user.availability = formatAvailability(availabilityType);
 			});
 
