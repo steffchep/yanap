@@ -65,12 +65,18 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 			var percentages = [],
 				sprintStart = moment(result.sprint.startDate),
-				sprintEnd = moment(result.sprint.endDate);
+				sprintEnd = moment(result.sprint.endDate),
+				weekendCounter = 0;
 			for (var dayIndex = 0; dayIndex < days.length; dayIndex++) {
-				var day = sprintStart.clone().add(dayIndex, 'days');
+				var day = sprintStart.clone().add(dayIndex + weekendCounter, 'days');
+				while (day.format('e') == 0 || day.format('e') == 6) {
+					day.add(1, 'day');
+					weekendCounter++;
+				}
 				if (day.isAfter(sprintEnd)) {
 					break;
 				}
+				
 				percentages.push({
 					index: dayIndex,
 					Day: day.format('dd DD'),
