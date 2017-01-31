@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 				percentages.push({
 					index: dayIndex,
-					Day: day.format('dd\\n DD'),
+					Day: day.format('dd DD'),
 					Total: total[days[dayIndex]],
 					Percent: total[days[dayIndex]] / result.availabilities.length * 100
 				});
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			node.innerHTML = '';
 			var svg = dimple.newSvg(node, 450, 170);
 			var myChart = new dimple.chart(svg, data);
-			myChart.setBounds(20, 10, '100%,-10px', '100%,-58px');
+			myChart.setBounds(20, 10, '100%,-10px', '100%,-50px');
 			var x = myChart.addCategoryAxis('x', 'Day');
 			x.addOrderRule('index');
 			myChart.addMeasureAxis('y', 'Percent');
