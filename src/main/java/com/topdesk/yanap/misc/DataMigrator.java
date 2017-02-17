@@ -19,6 +19,7 @@ import com.topdesk.yanap.database.UserAvailabilityRepository;
 import com.topdesk.yanap.database.UserBySprint;
 import com.topdesk.yanap.database.UserBySprintRepository;
 
+@SuppressWarnings("deprecation")
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

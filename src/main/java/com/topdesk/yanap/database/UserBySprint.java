@@ -33,6 +33,7 @@ import lombok.ToString;
 	@NamedQuery(name = "UserBySprint.deleteBySprint", query = "DELETE FROM UserBySprint s WHERE s.sprint.id = :sprintId"),
 	@NamedQuery(name = "UserBySprint.getSingleBySprint", query = "SELECT s FROM UserBySprint s WHERE s.sprint.id = :sprintId AND s.user.id = :userId")
 })
+@Deprecated
 public class UserBySprint {
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

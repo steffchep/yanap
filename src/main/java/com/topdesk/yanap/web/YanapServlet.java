@@ -56,14 +56,14 @@ public class YanapServlet {
 		sprintAndUsers.setTeam(sprint.getTeam());
 		sprintAndUsers.setPointsPlanned(sprint.getPointsPlanned());
 		sprintAndUsers.setPointsCompleted(sprint.getPointsCompleted());
-		sprintAndUsers.setDevelopers(sprint.getUsers().stream()
-				.filter(User::isDeveloper)
-				.map(user -> mapper.mapUserToUserAndDays(user, mapper.mapDateToLocalDate(sprint.getStartDate()), mapper.mapDateToLocalDate(sprint.getEndDate())))
-				.collect(Collectors.toList()));
-		sprintAndUsers.setNondevelopers(sprint.getUsers().stream()
-				.filter(user -> !user.isDeveloper())
-				.map(user -> mapper.mapUserToUserAndDays(user, mapper.mapDateToLocalDate(sprint.getStartDate()), mapper.mapDateToLocalDate(sprint.getEndDate())))
-				.collect(Collectors.toList()));
+		sprintAndUsers.setDevelopers(mapper.mapUsersToUserAndDays(
+				sprint.getUsers().stream().filter(User::isDeveloper).collect(Collectors.toList()),
+				mapper.mapDateToLocalDate(sprint.getStartDate()),
+				mapper.mapDateToLocalDate(sprint.getEndDate())));
+		sprintAndUsers.setNondevelopers(mapper.mapUsersToUserAndDays(
+				sprint.getUsers().stream().filter(user -> !user.isDeveloper()).collect(Collectors.toList()),
+				mapper.mapDateToLocalDate(sprint.getStartDate()),
+				mapper.mapDateToLocalDate(sprint.getEndDate())));
 		return sprintAndUsers;
 	}
 	

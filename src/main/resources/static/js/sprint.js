@@ -29,18 +29,47 @@ document.addEventListener('DOMContentLoaded', function() {
 		this.sprint = ko.observable();
 		this.availabilities = ko.observableArray();
 		
-		function fetchAvailability(teamName) {
+		function fetchCurrentSprint(teamName, callback) {
 			get({
-				url: '/userBySprints/search/findCurrent?team=' + teamName,
+				url: '/sprints/search/findCurrent?team=' + teamName,
 				success: function(availability) {
-					if (!(!availability || availability._embedded.userBySprints.length == 0)) {
-						resolveLinkedValues(availability._embedded.userBySprints);
+					if (!(!availability || availability._embedded.sprints.length == 0)) {
+						callback(availability._embedded.sprints[0]);
+					}
+				},
+				error: function() {
+					console.log('unable to fetch sprint')
+				}
+			})
+		}
+		
+		function fetchUsers(sprint, callback) {
+			get({
+				url: sprint._links.users,
+				success: function(users) {
+					if (!(!users || users._embedded.users.length == 0)) {
+						callback(users._embedded.users);
+					}
+				},
+				error: function() {
+					console.log('unable to fetch users')
+				}
+			})
+		}
+
+		function fetchAvailabilities(user, from, to, callback) {
+			get({
+				url: '/userAvailability/search/findByUserAndDayBetween?user=' + user._links.self + '&from=' + from + '&to=' + to,
+				success: function(availability) {
+					if (!(!availability || availability._embedded.sprints.length == 0)) {
+						callback(availability._embedded.sprints[0]);
 					}
 				},
 				error: function() {
 					console.log('unable to fetch availibility')
 				}
 			})
+			
 		}
 
 		function resolveLinkedValues(availabilities) {

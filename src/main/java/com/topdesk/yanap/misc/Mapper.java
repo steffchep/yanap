@@ -6,11 +6,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Table;
 import com.topdesk.yanap.database.User;
 import com.topdesk.yanap.database.UserAvailability;
 import com.topdesk.yanap.database.UserAvailability.Presence;
@@ -30,6 +32,7 @@ import com.topdesk.yanap.web.SprintAndUsers.UserAndDays;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class Mapper {
 	private static final ZoneId TIME_ZONE = ZoneId.of("Europe/Berlin");
+	public static final String LENIENT_ISO_DATE_PATTERN = "yyyy-MM-dd[[ ]['T']HH:mm[:ss[.SSS]][Z]]";
 	
 	private final UserAvailabilityRepository availabilities;
 	
@@ -71,6 +74,7 @@ public class Mapper {
 		return av < 3.9 || av > 4.1;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public List<Float> mapUserBySprintToListOfFloats(UserBySprint userBySprint) {
 		return Stream.of(
 				userBySprint.getDay01(), userBySprint.getDay02(), userBySprint.getDay03(), userBySprint.getDay04(),
@@ -86,18 +90,28 @@ public class Mapper {
 		return date.toInstant().atZone(Mapper.TIME_ZONE).toLocalDate();
 	}
 	
-	public UserAndDays mapUserToUserAndDays(User user, LocalDate sprintStart, LocalDate sprintEnd) {
+	public List<UserAndDays> mapUsersToUserAndDays(Collection<User> users, LocalDate sprintStart, LocalDate sprintEnd) {
+		Table<Long, LocalDate, UserAvailability> sprintAvailabilities = this.availabilities.findByUserInAndDayBetween(users, sprintStart, sprintEnd).stream()
+				.collect(ImmutableTable::<Long, LocalDate, UserAvailability>builder,
+						(builder, availibility) -> builder.put(availibility.getUser().getId(), availibility.getDay(), availibility),
+						(a, b) -> a.putAll(b.build()))
+				.build();
+		
+		return users.stream()
+				.map(user -> mapUserToUserAndDays(user, sprintStart, sprintEnd, sprintAvailabilities.row(user.getId())))
+				.collect(Collectors.toList());
+	}
+	
+	private UserAndDays mapUserToUserAndDays(User user, LocalDate sprintStart, LocalDate sprintEnd, Map<LocalDate, UserAvailability> sprintAvailabilities) {
 		UserAndDays userAndDays = new UserAndDays();
 		userAndDays.setId(user.getId());
 		userAndDays.setName(user.getName());
 		ArrayList<Float> days = new ArrayList<>();
 		userAndDays.setDays(days);
 		
-		Map<LocalDate, UserAvailability> availabilities = this.availabilities.findByUserAndDayBetween(user, sprintStart, sprintEnd).stream()
-				.collect(Collectors.toMap(UserAvailability::getDay, Function.identity()));
 		
 		for (LocalDate today = sprintStart; !today.isAfter(sprintEnd); today = nextWorkDay(today)) {
-			days.add(mapAvailabilityToFloat(availabilities.get(today)));
+			days.add(mapAvailabilityToFloat(sprintAvailabilities.get(today)));
 		}
 		return userAndDays;
 	}
