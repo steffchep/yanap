@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -51,6 +53,9 @@ public class Sprint {
 	@Column(name = "pointscompleted")
 	private int pointsCompleted;
 	
+	@ManyToMany
+	@JoinTable(name = "user_partof_sprint")
+	private Collection<User> users;
 	
 	@OneToMany(mappedBy = "sprint", orphanRemoval = true)
 	private Collection<UserBySprint> userBySprints;
