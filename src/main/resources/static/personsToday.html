@@ -4,6 +4,7 @@
 		<title>Person Availability</title>
 		<script src="js/lib/moment-with-locales-2.11.2.js"></script>
 		<script src="/webjars/knockout/3.4.1/knockout.js"></script>
+		<script src="js/tools.js"></script>
 		<script src="js/persons.js"></script>
 		<link rel="stylesheet" href="css/widgetStyle.css"/>
 	</head>
@@ -15,11 +16,11 @@
 					<h3>In Office</h3>
 					<ul>
 						<!-- ko foreach: teamMembers -->
-							<!-- ko if: $data.available -->
-							<li class="teamMember" data-bind="if: $data.available">
+							<!-- ko if: $data.inOffice -->
+							<li class="teamMember">
 								<span data-bind="class: $data.developer ? 'developer' : 'other'"></span>
 								<span class="name" data-bind="text: $data.name"></span>
-								<span class="availability" data-bind="text: '(' + $data.availability + ')'"></span>
+								<span class="availability" data-bind="text: '(' + $data.availabilityPercent + ')'"></span>
 							</li>
 							<!-- /ko -->
 						<!-- /ko -->
@@ -29,10 +30,13 @@
 					<h3>Out of Office</h3>
 					<ul>
 						<!-- ko foreach: teamMembers -->
-							<!-- ko if: !$data.available -->
+							<!-- ko if: !$data.inOffice -->
 							<li class="teamMember">
 								<span data-bind="class: $data.developer ? 'developer' : 'other'"></span>
 								<span class="name" data-bind="text: $data.name"></span>
+								<!-- ko if: $data.availability > 0 -->
+									<span class="availability" data-bind="text: '(' + $data.availabilityPercent + ')'"></span>
+								<!-- /ko -->
 							</li>
 							<!-- /ko -->
 						<!-- /ko -->

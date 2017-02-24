@@ -11,16 +11,22 @@ function get(params) {
 	
 	oReq.open('GET', url);
 	if (params.success) {
-		oReq.addEventListener('load', function() {
-			params.success(JSON.parse(oReq.responseText))
-		});
+		oReq.onloadend = function() {
+			if (oReq.status >= 200 && oReq.status < 300) {
+				params.success(JSON.parse(oReq.responseText))
+			} else if (params.error) {
+				params.error();
+			}
+		};
 	}
 	if (params.error) {
-		oReq.addEventListener('error', function() {
-			params.error()
-		});
+		oReq.onerror = params.error;
 	}
-	oReq.send();
+	try {
+		oReq.send();
+	} catch (err) {
+		console.log(err);
+	}
 }
 
 function DoStuffParallel() {
@@ -44,4 +50,17 @@ function DoStuffParallel() {
 		}
 	}
 }
-	
+
+function getParameter(paramName) {
+	return window.location.search.replace(new RegExp(".*" + paramName + "=([^&]*.*)"), '$1');
+}
+
+function unwrap(name, callback) {
+	return function(result) {
+		if (result && result["_embedded"] && result["_embedded"][name]) {
+			callback(result["_embedded"][name]);
+		} else {
+			console.log("found no " + name + " in response");
+		}
+	};
+}

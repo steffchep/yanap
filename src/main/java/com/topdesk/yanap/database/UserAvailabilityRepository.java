@@ -22,5 +22,7 @@ public interface UserAvailabilityRepository extends CrudRepository<UserAvailabil
 			LocalDate from,
 			LocalDate to);
 
-	UserAvailability findByUserAndDay(User user, LocalDate day);
+	UserAvailability findByUserAndDay(
+			@Param("user") User user,
+			@Param("day") @DateTimeFormat(pattern = Mapper.LENIENT_ISO_DATE_PATTERN) LocalDate day);
 }

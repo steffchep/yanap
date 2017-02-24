@@ -2,10 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 	
-	function getTeamName() {
-		return window.location.search.replace(/.*team=([^&]*.*)/, '$1');
-	}
-	
 	/**
 	 * @param user
 	 * @param availability
@@ -19,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	ko.applyBindings(new (function() {
 		var me = this;
-		me.teamName = getTeamName();
+		me.teamName = getParameter("team");
 		
 		me.sprint = ko.observable();
 		me.availabilities = ko.observableArray();
@@ -65,15 +61,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 			});
 		}
+		
 		function fetchCurrentSprint(teamName, callback) {
 			get({
 				url: '/sprints/search/findCurrent?team={}',
 				urlParams: [teamName],
-				success: function(availability) {
-					if (availability && availability._embedded.sprints.length > 0) {
-						callback(availability._embedded.sprints[0]);
+				success: unwrap("sprints", function(sprints) {
+					if (sprints.length > 0) {
+						callback(sprints[0]);
+					} else {
+						console.log("found no active sprint for team" + teamName);
 					}
-				},
+				}),
 				error: function() {
 					console.log('unable to fetch sprint')
 				}
@@ -83,11 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		function fetchUsers(sprint, callback) {
 			get({
 				url: sprint._links.users.href,
-				success: function(users) {
-					if (users && users._embedded.users) {
-						callback(users._embedded.users);
-					}
-				},
+				success: unwrap("users", callback),
 				error: function() {
 					console.log('unable to fetch users')
 				}
@@ -98,11 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			get({
 				url: '/userAvailabilities/search/findByUserAndDayBetween?user={}&from={}&to={}',
 				urlParams: [user._links.self.href, from, to],
-				success: function(availability) {
-					if (availability && availability._embedded.userAvailabilities) {
-						callback(availability._embedded.userAvailabilities);
-					}
-				},
+				success: unwrap("userAvailabilities", callback),
 				error: function() {
 					console.log('unable to fetch availibility')
 				}
