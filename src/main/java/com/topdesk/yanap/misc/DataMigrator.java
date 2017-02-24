@@ -54,13 +54,13 @@ public class DataMigrator implements ApplicationListener<ContextRefreshedEvent> 
 			Sprint sprint = userBySprint.getSprint();
 			sprint.getUsers().add(userBySprint.getUser());
 			sprintRepository.save(sprint);
-			LocalDate currentDay = mapper.mapDateToLocalDate(sprint.getStartDate());
+			LocalDate currentDay = mapper.mapDateToLocalDate(sprint.getStartDate()).minus(1, ChronoUnit.DAYS);
 			for (Float av : mapper.mapUserBySprintToListOfFloats(userBySprint)) {
+				currentDay = mapper.nextWorkDay(currentDay);
 				if (av >0) {
 					userAvailabilityRepo.save(mapper.mapToUserAvailability(userBySprint.getUser(), currentDay, av));
 					migrationCounter++;
 				}
-				currentDay = currentDay.plus(1, ChronoUnit.DAYS);
 			}
 		}
 		log.info("created {} availability entries", migrationCounter);

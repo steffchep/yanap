@@ -1,7 +1,6 @@
 package com.topdesk.yanap.database;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,8 +13,6 @@ import javax.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.hibernate.annotations.GenericGenerator;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -27,14 +24,13 @@ import org.hibernate.annotations.GenericGenerator;
 public class UserAvailability {
 	
 	@Id
-	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	private UUID id;
+	@GeneratedValue
+	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-//	@RestResource(exported = false)
 	private User user;
+	
 	private LocalDate day;
 	
 	private Presence presence;
