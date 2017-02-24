@@ -53,10 +53,12 @@ public class Sprint {
 	@Column(name = "pointscompleted")
 	private int pointsCompleted;
 	
+//	@RestResource(exported = false)
 	@ManyToMany
 	@JoinTable(name = "user_partof_sprint")
 	private Collection<User> users;
 	
+	@Deprecated
 	@OneToMany(mappedBy = "sprint", orphanRemoval = true)
 	private Collection<UserBySprint> userBySprints;
 }

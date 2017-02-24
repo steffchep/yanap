@@ -33,6 +33,7 @@ public class UserAvailability {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+//	@RestResource(exported = false)
 	private User user;
 	private LocalDate day;
 	

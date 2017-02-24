@@ -1,39 +1,76 @@
 // use strict
 
 document.addEventListener('DOMContentLoaded', function() {
+	
 	function getTeamName() {
 		return window.location.search.replace(/.*team=([^&]*.*)/, '$1');
 	}
-	function get(params) {
-		var oReq = new XMLHttpRequest();
-		oReq.open('GET', params.url);
-		if (params.success) {
-			oReq.addEventListener('load', function() {
-				params.success(JSON.parse(oReq.responseText))
-			});
-		}
-		if (params.error) {
-			oReq.addEventListener('error', function() {
-				params.error()
-			});
-		}
-		oReq.send();
-	}
 	
-	const days = ['day01', 'day02', 'day03', 'day04', 'day05', 'day06', 'day07', 'day08', 'day09', 'day10',
-		'day11', 'day12', 'day13', 'day14', 'day15', 'day16', 'day17', 'day18', 'day19', 'day20'];
+	/**
+	 * @param user
+	 * @param availability
+	 * @constructor
+	 */
+	function CalendarEntry(user, availability) {
+		this["Type"] = user ? "Developers" : "Other";
+		this["Persons Available"] = availability.availability || 0;
+		this["Date"] = availability.day;
+		this["Weekday"] = moment(availability.day).format('dd');
+	}
 	ko.applyBindings(new (function() {
 		var me = this;
-		this.teamName = getTeamName();
+		me.teamName = getTeamName();
 		
-		this.sprint = ko.observable();
-		this.availabilities = ko.observableArray();
+		me.sprint = ko.observable();
+		me.availabilities = ko.observableArray();
 		
+		if (me.teamName) {
+			update();
+			window.setInterval(update, 300000);
+		}
+		
+		function update() {
+			fetchCurrentSprint(me.teamName, function(sprint) {
+				fetchUsers(sprint, function(users) {
+					var series = [],
+						coordinator = new DoStuffParallel();
+					
+					users.forEach(function(user) {
+						coordinator.submit(
+							function(callback) {
+								fetchAvailabilities(user, sprint.startDate, sprint.endDate, callback);
+							},
+							function(availabilities) {
+								availabilities.forEach(function(availability) {
+									series.push(new CalendarEntry(user, availability));
+								})
+							});
+					});
+					
+					coordinator.onDone(function() {
+						var currentDay = moment(sprint.startDate),
+							endDay = moment(sprint.endDate);
+						
+						while (!currentDay.isAfter(endDay)) {
+							series.push(new CalendarEntry({}, {
+								day: currentDay.format('YYYY-MM-DD')
+							}));
+							currentDay.add(1, 'day');
+							while (currentDay.format('e') == 0 || currentDay.format('e') == 6) {
+								currentDay.add(1, 'day');
+							}
+						}
+						me.availabilities(series);
+					})
+				});
+			});
+		}
 		function fetchCurrentSprint(teamName, callback) {
 			get({
-				url: '/sprints/search/findCurrent?team=' + teamName,
+				url: '/sprints/search/findCurrent?team={}',
+				urlParams: [teamName],
 				success: function(availability) {
-					if (!(!availability || availability._embedded.sprints.length == 0)) {
+					if (availability && availability._embedded.sprints.length > 0) {
 						callback(availability._embedded.sprints[0]);
 					}
 				},
@@ -45,9 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		function fetchUsers(sprint, callback) {
 			get({
-				url: sprint._links.users,
+				url: sprint._links.users.href,
 				success: function(users) {
-					if (!(!users || users._embedded.users.length == 0)) {
+					if (users && users._embedded.users) {
 						callback(users._embedded.users);
 					}
 				},
@@ -56,13 +93,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			})
 		}
-
+		
 		function fetchAvailabilities(user, from, to, callback) {
 			get({
-				url: '/userAvailability/search/findByUserAndDayBetween?user=' + user._links.self + '&from=' + from + '&to=' + to,
+				url: '/userAvailabilities/search/findByUserAndDayBetween?user={}&from={}&to={}',
+				urlParams: [user._links.self.href, from, to],
 				success: function(availability) {
-					if (!(!availability || availability._embedded.sprints.length == 0)) {
-						callback(availability._embedded.sprints[0]);
+					if (availability && availability._embedded.userAvailabilities) {
+						callback(availability._embedded.userAvailabilities);
 					}
 				},
 				error: function() {
@@ -71,71 +109,31 @@ document.addEventListener('DOMContentLoaded', function() {
 			})
 			
 		}
-
-		function resolveLinkedValues(availabilities) {
-			get({
-				url: availabilities[0]._links.sprint.href,
-				success: function(sprint) {
-					showResult({
-						sprint: sprint,
-						availabilities: availabilities
-					});
-				}
-			});
-		}
-		
-		function showResult(result) {
-			var total = {};
-			result.availabilities.forEach(function(user) {
-				days.forEach(function(day) {
-					var userToday = user[day];
-					total[day] = (total[day] || 0) + (userToday <= 1 ? userToday : 0);
-				});
-			});
-			var percentages = [],
-				sprintStart = moment(result.sprint.startDate),
-				sprintEnd = moment(result.sprint.endDate),
-				weekendCounter = 0;
-			for (var dayIndex = 0; dayIndex < days.length; dayIndex++) {
-				var day = sprintStart.clone().add(dayIndex + weekendCounter, 'days');
-				while (day.format('e') == 0 || day.format('e') == 6) {
-					day.add(1, 'day');
-					weekendCounter++;
-				}
-				if (day.isAfter(sprintEnd)) {
-					break;
-				}
-				
-				percentages.push({
-					index: dayIndex,
-					Day: day.format('dd DD'),
-					Total: total[days[dayIndex]],
-					Percent: total[days[dayIndex]] / result.availabilities.length * 100
-				});
-			}
-			days.forEach(function(day) {
-			});
-			me.availabilities(percentages);
-		}
-
-		if (me.teamName) {
-			fetchAvailability(me.teamName);
-			window.setInterval(fetchAvailability, 300000, me.teamName);
-		}
 		
 		me.availabilities.subscribe(function(data) {
 			var node = document.getElementById('diagram');
 			node.innerHTML = '';
 			var svg = dimple.newSvg(node, 450, 170);
 			var myChart = new dimple.chart(svg, data);
-			myChart.setBounds(20, 10, '100%,-10px', '100%,-50px');
-			var x = myChart.addCategoryAxis('x', 'Day');
-			x.addOrderRule('index');
-			myChart.addMeasureAxis('y', 'Percent');
-			myChart.addSeries(null, dimple.plot.line);
+			myChart.setBounds(35, 15, '100%,-40px', '100%,-55px');
+			var x = myChart.addCategoryAxis('x', 'Date');
+			x.addOrderRule('Date');
+			var y = myChart.addMeasureAxis('y', 'Persons Available');
+			y.ticks = 5;
+			y.tickFormat = 'r';
+			myChart.addSeries("Type", dimple.plot.bar);
+			myChart.addLegend(0, 3, '100%,-4px', 10, "right");
 			myChart.draw();
+			x.shapes.selectAll("text")
+				.text(function (d) {
+					for (var i = 0; i < data.length; i++) {
+						if (data[i]["Date"] == d) {
+							return data[i]["Weekday"];
+						}
+					}
+				})
+				.attr('transform', '');
 		});
 	})());
 	
-	getTeamName();
 }, false);
