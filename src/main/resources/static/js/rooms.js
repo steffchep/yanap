@@ -32,15 +32,18 @@ function showUsers(target, seats) {
 				coordinator.submit(
 					function(resultCallback) {
 						get({
-							url: "/users/search/findByName?name={}",
+							url: "/users/search/findByNameStartsWith?prefix={}",
 							urlParams: [seat.name],
 							success: unwrap("users", resultCallback),
 							error: console.log
 						});
 					},
-					function(usersByName) {
+					function(users) {
+						users.sort(function(u1, u2) {
+							return u2.name.length - u1.name.length;
+						});
 						userData[seat.name] = {
-							user: usersByName[0] || {name: seat.name},
+							user: users[0] || {name: seat.name},
 							availability: ko.observable(unknownAvailability())
 						};
 					});
