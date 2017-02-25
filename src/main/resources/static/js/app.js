@@ -4,7 +4,6 @@ var emptySprint = {
 };
 
 var weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "", ""];
-var daysInWeek = 7;
 
 var createTableHeaders = function(sprint) {
 	"use strict";
@@ -319,6 +318,42 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 				$('#saveerror').show();
 				enableSaveButton();
 				console.log("Error saving the Sprint: " + JSON.stringify(err, null, " "));
+			});
+	};
+	$scope.removePerson = function(person) {
+		confirmPopup("Are you sure you want to remove <b>" + person.name + "</b> from sprint <b>'" + $scope.sprint.name + "'</b>?", function() {
+			$http.post("/removeUserFromSprint?user=" + person.id + "&sprint=" + $scope.sprint.id)
+				.success(function(){
+					console.log("user removed, updating list");
+					location.reload();
+				});
+		});
+	};
+	$scope.addPerson = function() {
+		$http.get("/users/")
+			.success(function(response) {
+				var html= $(
+					'<div class="errorpopup">' +
+						'<div class="confirm">' +
+							'<form method="post" action="/addUserToSprint">' +
+								'<p>' +
+									'Pick User to add: ' +
+									'<select class="me" name="user"></select>' +
+								'</p>' +
+								'<input type="submit" value="Add"/>' +
+								'<input type="reset" class="cancel" value="Cancel">' +
+								'<input type="hidden" name="sprint" value="' + $scope.sprint.id + '" />' +
+							'</form>' +
+						'</div>' +
+					'</div>'
+				);
+				response._embedded.users.forEach(function(user) {
+					html.find('.me').append($('<option></option>').text(user.name).val(user._links.self.href))
+				});
+				html.find('.cancel').click(function() {
+					html.remove();
+				});
+				html.appendTo('body');
 			});
 	};
 	$scope.calculateDevDays = calculateDevDays;

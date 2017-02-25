@@ -10,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import com.topdesk.yanap.database.Sprint;
 import com.topdesk.yanap.database.SprintRepository;
@@ -25,7 +21,7 @@ import com.topdesk.yanap.database.UserRepository;
 import com.topdesk.yanap.misc.Mapper;
 
 @Slf4j
-@RestController
+@Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class YanapServlet {
 	
@@ -34,6 +30,7 @@ public class YanapServlet {
 	private final UserRepository users;
 	private final Mapper mapper;
 
+	@ResponseBody
 	@RequestMapping(value = "/boards/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public SprintAndUsers doGetSingleSprint(@PathVariable long id) {
 
@@ -45,7 +42,37 @@ public class YanapServlet {
 		}
 		return mapSprintToSprintAndUsers(sprint);
 	}
-	
+
+	@ResponseBody
+	@RequestMapping(value = "/removeUserFromSprint", method = RequestMethod.POST)
+	public void removeUserFromSprint(@RequestParam(name = "sprint") long sprintId, @RequestParam(name = "user") long userId) {
+		Sprint sprint = sprints.findOne(sprintId);
+		if (sprint == null) {
+			throw new ResourceNotFoundException("sprint " + sprintId + " not found");
+		}
+		sprint.getUsers().removeIf(user -> user.getId() == userId);
+		sprints.save(sprint);
+		log.info("removed {} from sprint {}", userId, sprintId);
+	}
+
+	@RequestMapping(value = "/addUserToSprint", method = RequestMethod.POST)
+	public String addUserToSprint(@RequestParam(name = "user") String userUri, @RequestParam(name = "sprint") long sprintId) {
+		Sprint sprint = sprints.findOne(sprintId);
+		if (sprint == null) {
+			throw new ResourceNotFoundException("sprint " + sprintId + " not found");
+		}
+		long userId = Long.parseLong(userUri.replaceAll("^.*/(?=\\d*$)", ""));
+		User user = users.findOne(userId);
+		if (user == null) {
+			throw new ResourceNotFoundException("user " + userId + " not found");
+		}
+		if (!sprint.getUsers().contains(user)) {
+			sprint.getUsers().add(user);
+			sprints.save(sprint);
+		}
+		return "redirect:/board.html?id=" + sprintId;
+	}
+
 	private SprintAndUsers mapSprintToSprintAndUsers(Sprint sprint) {
 		SprintAndUsers sprintAndUsers = new SprintAndUsers();
 		sprintAndUsers.setId(sprint.getId());
@@ -66,7 +93,8 @@ public class YanapServlet {
 				mapper.mapDateToLocalDate(sprint.getEndDate())));
 		return sprintAndUsers;
 	}
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/boards", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void doCreateSprint(@RequestBody Sprint newSprint) {
@@ -74,7 +102,8 @@ public class YanapServlet {
 		newSprint.setStatus(1);
 		sprints.save(newSprint);
 	}
-	
+
+	@ResponseBody
 	@RequestMapping(value = "/boards/{sprintId}/availability", method = RequestMethod.POST)
 	public StatusUpdateData doSaveProperty(@PathVariable long sprintId, @RequestBody StatusUpdateData updateData) {
 		log.info("Save Property for sprint " + sprintId + ": " + updateData);

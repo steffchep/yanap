@@ -119,6 +119,11 @@ h2 ul {
 	width: 200px;
 }
 
+.person-actions {
+	width: 0;
+	padding: 4px;
+}
+
 li {
 	list-style-type: none;
 	margin: 0;

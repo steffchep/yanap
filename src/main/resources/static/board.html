@@ -37,7 +37,7 @@
 				<th>Name</th>
 				<th ng-repeat="day in tableHeaders">{{day}}</th>
 			</tr>
-			<tr ng-repeat="person in sprint.developers">
+			<tr ng-repeat="person in sprint.developers" class="person hoverable">
 				<td class="name">{{person.name}}</td>
 				<td ng-repeat="day in person.days">
 					<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(makeId(person.name) + '_' + $index)"></div>
@@ -49,11 +49,14 @@
 						<li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person, $index, 4)">:(</li>
 					</ul>
 				</td>
+				<td class="person-actions">
+					<button ng-click="removePerson(person)">X</button>
+				</td>
 			</tr>
 			<tr class="spacer">
 				<td class="spacer"></td>
 			</tr>
-			<tr ng-repeat="person in sprint.nondevelopers">
+			<tr ng-repeat="person in sprint.nondevelopers" class="person hoverable">
 				<td class="name">{{person.name}}</td>
 				<td ng-repeat="day in person.days">
 					<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(makeId(person.name) + '_' + $index)"></div>
@@ -65,6 +68,9 @@
 						<li class="clickable notavailable hideonupcoming" title="unplanned" ng-click="setAvail(person, $index, 4)">:(</li>
 					</ul>
 				</td>
+				<td class="person-actions">
+					<button ng-click="removePerson(person)">X</button>
+				</td>
 			</tr>
 			<tr class="spacer">
 				<td class="spacer"></td>
@@ -73,6 +79,9 @@
 				<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of {{totalDays(sprint.developers)}} days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
 			</tr>
 		</table>
+		<div class="sprint-actions">
+			<button ng-click="addPerson()">Add Person</button>
+		</div>
 		<div class="legend">
 			<strong>Legend</strong>:
 			<span class="noneselected">?</span> = not yet selected,
