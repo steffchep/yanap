@@ -42,7 +42,7 @@ function DoStuffParallel() {
 				onDone();
 			}
 		})
-	}
+	};
 	this.onDone = function(callback) {
 		onDone = callback;
 		if (todos == 0) {
@@ -61,6 +61,7 @@ function unwrap(name, callback) {
 			callback(result["_embedded"][name]);
 		} else {
 			console.log("found no " + name + " in response");
+			callback([]);
 		}
 	};
 }
