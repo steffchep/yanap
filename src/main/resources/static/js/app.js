@@ -265,15 +265,34 @@ function getTeamList($scope, $http) {
 	});
 }
 
-var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize']);
+var availabilityBoard = angular.module('availabilityBoard', ['ngSanitize', 'xeditable']);
+
 
 availabilityBoard.controller('availabilityController', function($scope, $http) {
 	"use strict";
 	var id = getParameterByName("id");
 	$scope.sprint = emptySprint;
-	
+	function hash(sprint) {
+		return JSON.stringify({
+			"name": sprint.name,
+			"team": sprint.team,
+			"startDate": sprint.startDate,
+			"endDate": sprint.endDate,
+			"status": sprint.status,
+			"pointsPlanned": sprint.pointsPlanned,
+			"pointsCompleted": sprint.pointsCompleted
+		});
+	}
+	var loadedHash = hash(emptySprint);
+	$scope.sprintChanged = function() {
+		var current = hash($scope.sprint);
+		return current != loadedHash;
+	};
 	$http.get('boards/' + id).success(function(res){
+		res.startDate = new Date(res.startDate);
+		res.endDate = new Date(res.endDate);
 		$scope.sprint = res;
+		loadedHash = hash(res);
 		$scope.tableHeaders = createTableHeaders($scope.sprint);
 		adjustSprintDays($scope.sprint, $scope.tableHeaders.length);
 		$('.summary').attr("colspan", $scope.tableHeaders.length + 1);
@@ -312,7 +331,7 @@ availabilityBoard.controller('availabilityController', function($scope, $http) {
 			team: $scope.sprint.team
 		})
 			.success(function() {
-				enableSaveButton();
+				location.reload();
 			})
 			.error(function(err) {
 				$('#saveerror').show();

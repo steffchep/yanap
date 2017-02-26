@@ -40,19 +40,22 @@ h1 button {
 	padding: 0.2em;
 }
 
-h1 input, h2 input {
-	color: white;
-	text-shadow: 1px 1px 3px #000000;
-	background: transparent;
-	font-size: 130%;
-	border: none;
-	width: 70%;
+.story-points {
+	white-space: nowrap;
 }
-
-h2 input {
-	font-size: 100%;
-	width: 1.5em;
+.story-points input {
+	width: 3em;
+}
+a[editable-text], a[editable-date], a[editable-number] {
+	color: inherit !important;
+}
+.sprint-actions button {
+	padding: 6px 10px;
+	font-size: 17pt;
+}
+.sprint-actions {
 	text-align: right;
+	margin: 20px 0 0 0;
 }
 
 label {

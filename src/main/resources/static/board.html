@@ -4,8 +4,10 @@
 <head>
 	<title>{{sprint.name}}</title>
 	<script src="js/lib/jquery-2.1.4.min.js"></script>
-	<script src="js/lib/angular.min.js"></script>
-	<script src="js/lib/angular-sanitize.js"></script>
+	<script src="/webjars/angularjs/1.5.0/angular.min.js"></script>
+	<script src="/webjars/angularjs/1.5.0/angular-sanitize.min.js"></script>
+	<script src="/webjars/angular-xeditable/0.1.11/dist/js/xeditable.min.js"></script>
+	<link href="/webjars/angular-xeditable/0.1.11/dist/css/xeditable.min.css" rel="stylesheet" />
 	<script src="js/lib/moment-with-locales-2.11.2.js"></script>
 	<script src="js/app.js"></script>
 	<link rel="stylesheet" href="css/style.css"/>
@@ -13,33 +15,48 @@
 
 <body>
 	<div class="content">
-		<h1>
-			<input required type="text" ng-model="sprint.name"><button id="updateSprintButton" ng-click="saveSprint()" title="Save changes to Sprint name, status and story points">Save</button>
-		</h1>
-		<div class="sidebyside">
+		<div style="float: left">
+			<h1><a href="#" editable-text="sprint.name" buttons="no" blur="submit">{{sprint.name}}</a></h1>
 			<h1>by team {{sprint.team}}</h1>
-			<div><a class="clickable" href="index.html">&raquo;Back to Sprint List</a></div>
 		</div>
-		<h2>Start: {{formatTime(sprint.startDate)}} - End: {{formatTime(sprint.endDate)}} -  Status:
+		<div style="float: right; text-align: right">
+			<a class="clickable" href="index.html">&raquo;Back to Sprint List</a>
+			<div class="sprint-actions">
+				<button id="updateSprintButton" ng-disabled="!sprintChanged()" ng-click="saveSprint()" title="Save changes to Sprint name, status and story points">Save</button>
+				<button ng-click="addPerson()" ng-disabled="sprintChanged()" ng-attr-title="{{'Add Person' + (sprintChanged() ? ' (only possible when sprint is saved)' : '')}}">Add Person</button>
+			</div>
+		</div>
+		<div style="clear: both"></div>
+
+		<h2>
+			Start:
+			<a href="#" editable-date="sprint.startDate" buttons="no" blur="submit">{{formatTime(sprint.startDate)}}</a>
+			- End:
+			<a href="#" editable-date="sprint.endDate" buttons="no" blur="submit">{{formatTime(sprint.endDate)}}</a>
+			-  Status:
 			<span>
 				<span id="sprintStatus" ng-click="statusPopup(sprint.id)" class="status {{getClassForStatus(sprint.status)}}">{{getStatusText(sprint.status)}}</span>,
-				<!--suppress HtmlUnknownTag -->
 				<ul id="{{sprint.id}}" style="display: none">
 					<li class="clickable upcoming" title="upcoming" ng-click="setSprintStatus(1)">upcoming</li>
 					<li class="clickable in_progress" title="in progress" ng-click="setSprintStatus(2)">in progress</li>
 					<li class="clickable ended" title="ended" ng-click="setSprintStatus(3)">ended</li>
 				</ul>
 			</span>
-			Story Points done/planned:
-			<input type="text" ng-model="sprint.pointsCompleted"> /<input type="text" ng-model="sprint.pointsPlanned"></h2>
+			<br />
+			Story Points done / planned:
+			<span class="story-points">
+				<a href="#" editable-number="sprint.pointsCompleted" buttons="no" blur="submit">{{sprint.pointsCompleted}}</a>
+				/ <a href="#" editable-number="sprint.pointsPlanned" buttons="no" blur="submit">{{sprint.pointsPlanned}}</a>
+			</span>
+		</h2>
 		<table>
 			<tr>
 				<th>Name</th>
-				<th ng-repeat="day in tableHeaders">{{day}}</th>
+				<th ng-repeat="day in tableHeaders track by $index">{{day}}</th>
 			</tr>
 			<tr ng-repeat="person in sprint.developers" class="person hoverable">
 				<td class="name">{{person.name}}</td>
-				<td ng-repeat="day in person.days">
+				<td ng-repeat="day in person.days track by $index">
 					<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(makeId(person.name) + '_' + $index)"></div>
 					<ul id="{{makeId(person.name) + '_' + $index}}" style="display: none">
 						<li class="clickable available" title="available" ng-click="setAvail(person, $index, 1)">&#x2713;</li>
@@ -58,7 +75,7 @@
 			</tr>
 			<tr ng-repeat="person in sprint.nondevelopers" class="person hoverable">
 				<td class="name">{{person.name}}</td>
-				<td ng-repeat="day in person.days">
+				<td ng-repeat="day in person.days track by $index">
 					<div ng-bind-html="getMarkup(day).character" class="clickable {{getMarkup(day).class}}" ng-click="availabilityPopup(makeId(person.name) + '_' + $index)"></div>
 					<ul id="{{'' + makeId(person.name) + '_' + $index}}" style="display: none">
 						<li class="clickable available" title="available" ng-click="setAvail(person, $index, 1)">&#x2713;</li>
@@ -79,9 +96,6 @@
 				<td class="summary" colspan="11">= {{calculateDevDays(sprint.developers)}} developer days in this sprint ({{percentTotal(sprint.developers)}} of a total of {{totalDays(sprint.developers)}} days) - including <span class="ended">{{getUnplannedAbsences(sprint.developers)}}</span> day(s) of <span class="ended">unplanned</span> absence</td>
 			</tr>
 		</table>
-		<div class="sprint-actions">
-			<button ng-click="addPerson()">Add Person</button>
-		</div>
 		<div class="legend">
 			<strong>Legend</strong>:
 			<span class="noneselected">?</span> = not yet selected,
